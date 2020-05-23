@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<link rel="stylesheet" href="/layui/css/layui.css" media="all">
+<style>
+
+</style>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin" >
+    <div th:replace="~{background/index :: head}"></div>
+    <div th:replace="~{background/index :: side}"></div>
+    <div class="layui-body">
+        <div style="padding: 15px;">
+            <div class="layui-tab layui-tab-card" style="height: 500px">
+                <ul class="layui-tab-title">
+                    <li class="layui-this">导航栏配色</li>
+                    <li>设置群二维码</li>
+                    <li>摄影故事主图</li>
+                    <li>待开发</li>
+                    <li>待开发</li>
+                </ul>
+                <div class="layui-tab-content" style="height: 100px;">
+                    <div class="layui-tab-item layui-show">
+                        <div style="margin-left: 30px;">
+                            设置导航栏颜色
+                            <input type="hidden" name="color" value="" id="test-all-input">
+                            <div id="test-all"></div>
+                        </div>
+                    </div>
+                    <div class="layui-tab-item">
+                        <fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;">
+                            <legend>设置群二维码</legend>
+                        </fieldset>
+                        <div class="layui-upload-drag" id="test10">
+                            <i class="layui-icon"></i>
+                            <p>点击上传，或将文件拖拽到此处</p>
+                            <div class="layui-hide" id="uploadDemoView">
+                                <hr>
+                                <img src="" alt="上传成功后渲染" style="max-width: 196px">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-tab-item">
+                        <fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;">
+                            <legend>设置摄影故事主图</legend>
+                        </fieldset>
+                        <div class="layui-upload-drag" id="test11">
+                            <i class="layui-icon"></i>
+                            <p>点击上传，或将文件拖拽到此处</p>
+                        </div>
+                    </div>
+                    <div class="layui-tab-item">4</div>
+                    <div class="layui-tab-item">5</div>
+                    <div class="layui-tab-item">6</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div th:replace="~{background/index :: footer}"></div>
+</div>
+</body>
+<script src="/webjars/jquery/1.11.1/jquery.min.js"></script>
+
+<script src="/layui/layui.all.js"></script>
+
+<script>
+    layui.use(['element','jquery','colorpicker','upload'], function(){
+        var element = layui.element;
+        var jquery = layui.jquery;
+        // var upload = layui.upload;
+        var colorpicker = layui.colorpicker;
+        colorpicker.render({
+            elem: '#test-all'
+            ,color: 'rgba(7, 155, 140, 1)'
+            ,format: 'rgb'
+            ,predefine: true
+            ,alpha: true
+            ,done: function(color){
+                $('#test-all-input').val(color); //向隐藏域赋值
+                $.ajax({
+                    url:'/setNav_color',
+                    type:'post',
+                    data:{"style_val":color},
+                    success:function (data) {
+                        if(JSON.stringify(data)=='true'){
+                            layer.msg("导航主色设置成功");
+                        }
+                        else{
+                            layer.msg("操作失败");
+                        }
+                    },
+                    error:function f() {
+                        layer.msg("接口异常");
+                    }
+                })
+
+                // layer.tips('设置了颜色值：'+ color, this.elem);
+
+                color || this.change(color); //清空时执行 change
+            }
+            ,change: function(color){
+
+            }
+        });
+        var upload = layui.upload;
+        //执行实例
+        var setERcode = upload.render({
+            elem: '#test10', //绑定元素
+            accept: 'file',
+            size: 307200,
+            url: '/setER',//上传接口
+            method: 'POST',
+            done: function(res){
+                //上传完毕回调
+                layer.msg("二维码修改成功！"+res.msg, {
+                    icon: 1,
+                    title: "提示"
+                });
+                layui.$('#uploadDemoView').removeClass('layui-hide').find('img').attr('src', res.files.file);
+                // setTimeout(function(){
+                //     window.location.reload();//刷新当前页面.
+                // },1500)
+            }
+            ,error: function(res){
+                //请求异常回调
+                layer.alert("后台出错", {
+                    icon: 5,
+                    title: "提示"
+                });
+            }
+        });
+
+        var setPhotoimg = upload.render({
+            elem: '#test11', //绑定元素
+            accept: 'file',
+            size: 307200,
+            url: '/setPhotoimg',//上传接口
+            method: 'POST',
+            done: function(res){
+                //上传完毕回调
+                layer.msg("主图修改成功！"+res.msg, {
+                    icon: 1,
+                    title: "提示"
+                });
+            }
+            ,error: function(res){
+                //请求异常回调
+                layer.alert("后台出错", {
+                    icon: 5,
+                    title: "提示"
+                });
+            }
+        });
+    });
+</script>
+
+<script>
+
+
+</script>
+</html>

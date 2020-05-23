@@ -1,0 +1,196 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8">
+  <title>发表问题 编辑问题 公用</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="keywords" content="fly,layui,前端社区">
+  <meta name="description" content="Fly社区是模块化前端UI框架Layui的官网社区，致力于为web开发提供强劲动力">
+  <link rel="stylesheet" href="/res/layui/css/layui.css">
+  <link rel="stylesheet" href="/res/css/global.css">
+</head>
+<body>
+<div th:replace="~{fly/html/jie/index :: head_nav }"></div>
+<!--<div class="fly-header layui-bg-black">-->
+  <!--<div class="layui-container">-->
+    <!--<a class="fly-logo" href="/index_jie">-->
+      <!--&lt;!&ndash;<img src="/res/images/logo.png" alt="layui">&ndash;&gt;-->
+    <!--</a>-->
+    <!--<ul class="layui-nav fly-nav layui-hide-xs">-->
+      <!--&lt;!&ndash;<li class="layui-nav-item layui-this">&ndash;&gt;-->
+        <!--&lt;!&ndash;<a href="/"><i class="iconfont icon-jiaoliu"></i>交流</a>&ndash;&gt;-->
+      <!--&lt;!&ndash;</li>&ndash;&gt;-->
+      <!--&lt;!&ndash;<li class="layui-nav-item">&ndash;&gt;-->
+        <!--&lt;!&ndash;<a href="/cases"><i class="iconfont icon-iconmingxinganli"></i>案例</a>&ndash;&gt;-->
+      <!--&lt;!&ndash;</li>&ndash;&gt;-->
+      <!--&lt;!&ndash;<li class="layui-nav-item">&ndash;&gt;-->
+        <!--&lt;!&ndash;<a href="http://www.layui.com/" target="_blank"><i class="iconfont icon-ui"></i>框架</a>&ndash;&gt;-->
+      <!--&lt;!&ndash;</li>&ndash;&gt;-->
+    <!--</ul>-->
+    <!---->
+    <!--<ul class="layui-nav fly-nav-user">-->
+      <!---->
+      <!--&lt;!&ndash; 未登入的状态 &ndash;&gt;-->
+      <!--&lt;!&ndash;-->
+      <!--<li class="layui-nav-item">-->
+        <!--<a class="iconfont icon-touxiang layui-hide-xs" href="user/login.html"></a>-->
+      <!--</li>-->
+      <!--<li class="layui-nav-item">-->
+        <!--<a href="user/login.html">登入</a>-->
+      <!--</li>-->
+      <!--<li class="layui-nav-item">-->
+        <!--<a href="user/reg.html">注册</a>-->
+      <!--</li>-->
+      <!--<li class="layui-nav-item layui-hide-xs">-->
+        <!--<a href="/app/qq/" onclick="layer.msg('正在通过QQ登入', {icon:16, shade: 0.1, time:0})" title="QQ登入" class="iconfont icon-qq"></a>-->
+      <!--</li>-->
+      <!--<li class="layui-nav-item layui-hide-xs">-->
+        <!--<a href="/app/weibo/" onclick="layer.msg('正在通过微博登入', {icon:16, shade: 0.1, time:0})" title="微博登入" class="iconfont icon-weibo"></a>-->
+      <!--</li>-->
+       <!--&ndash;&gt;-->
+      <!---->
+      <!--&lt;!&ndash; 登入后的状态 &ndash;&gt;-->
+      <!--<li class="layui-nav-item">-->
+        <!--<a class="fly-nav-avatar" href="javascript:;">-->
+          <!--<cite class="layui-hide-xs">[[${user.name}]]</cite>-->
+          <!--<i class="iconfont icon-renzheng layui-hide-xs" title="认证信息：layui 作者"></i>-->
+          <!--<i class="layui-badge fly-badge-vip layui-hide-xs">VIP3</i>-->
+          <!--<img th:src="${user.head_icon}">-->
+        <!--</a>-->
+        <!--<dl class="layui-nav-child">-->
+          <!--<dd><a href="/set"><i class="layui-icon">&#xe620;</i>基本设置</a></dd>-->
+          <!--<dd><a href="/message"><i class="iconfont icon-tongzhi" style="top: 4px;"></i>我的消息</a></dd>-->
+          <!--<dd><a href="/home"><i class="layui-icon" style="margin-left: 2px; font-size: 22px;">&#xe68e;</i>我的主页</a></dd>-->
+          <!--<hr style="margin: 5px 0;">-->
+          <!--<dd><a href="" style="text-align: center;">退出</a></dd>-->
+        <!--</dl>-->
+      <!--</li>-->
+    <!--</ul>-->
+  <!--</div>-->
+<!--</div>-->
+
+<div class="layui-container fly-marginTop">
+  <div class="fly-panel" pad20 style="padding-top: 5px;">
+    <!--<div class="fly-none">没有权限</div>-->
+    <div class="layui-form layui-form-pane">
+      <div class="layui-tab layui-tab-brief" lay-filter="user">
+        <ul class="layui-tab-title">
+          <li class="layui-this">我来投稿<!-- 编辑帖子 --></li>
+        </ul>
+        <div class="layui-form layui-tab-content" id="LAY_ucm" style="padding: 20px 0;">
+          <div class="layui-tab-item layui-show">
+            <form action="/do_ipost" method="post"  >
+              <div class="layui-row layui-col-space15 layui-form-item">
+                <div class="layui-col-md3">
+                  <label class="layui-form-label">所在专栏</label>
+                  <div class="layui-input-block">
+                    <select lay-verify="required" name="ipost_type" lay-filter="column">
+                        <option></option>
+                      <option value="摄影专栏" >摄影专栏</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="layui-col-md9">
+                  <label for="L_title" class="layui-form-label">标题</label>
+                  <div class="layui-input-block">
+                      <input name="iposter_id" th:value="${user.id}" style="display: none;">
+                      <input name="iposter_name" th:value="${user.name}" style="display: none;">
+                      <input type="text" id="L_title" name="ipost_title" required lay-verify="required" autocomplete="off" class="layui-input">
+                    <!-- <input type="hidden" name="id" value="{{d.edit.id}}"> -->
+                  </div>
+                </div>
+              </div>
+              <div class="layui-row layui-col-space15 layui-form-item layui-hide" id="LAY_quiz">
+                <div class="layui-col-md3">
+                  <label class="layui-form-label">类别</label>
+                  <div class="layui-input-block">
+                    <select name="ipost_class">
+                      <option></option>
+                      <option value="旅途">旅途</option>
+                      <option value="校园">校园</option>
+                      <option value="怀旧">怀旧</option>
+                      <option value="理想">理想</option>
+                      <option value="非主流">非主流</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="layui-col-md3">
+                  <label class="layui-form-label" for="L_version">关键词</label>
+                  <div class="layui-input-block">
+                    <input type="text" id="L_version" value="" name="ipost_keywords" autocomplete="off" class="layui-input">
+                  </div>
+                </div>
+                <div class="layui-col-md6">
+                  <label class="layui-form-label" >故事旋律</label>
+                  <div class="layui-input-block">
+                    <select name="ipost_mood">
+                      <option></option>
+                      <option value="愉快">愉快</option>
+                      <option value="搞笑">搞笑</option>
+                      <option value="感人">感人</option>
+                      <option value="低沉">低沉</option>
+                      <option value="洒脱">洒脱</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="layui-col-md12">
+                  <label for="L_title" class="layui-form-label">引导词</label>
+                  <div class="layui-input-block">
+                    <textarea   name="ipost_leadwords" required lay-verify="required" autocomplete="off" class="layui-textarea" style="height: 130px;"></textarea>
+                  </div>
+                </div>
+              </div>
+              <div class="layui-form-item layui-form-text">
+                <div class="layui-input-block">
+                  <input id="ipost_img" name="ipost_img" style="display: none" />
+                  <textarea id="L_content" name="ipost_content" required lay-verify="required" placeholder="详细描述" class="layui-textarea fly-editor" style="height: 260px;"></textarea>
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <button class="layui-btn" style="background-color: deepskyblue" lay-filter="l" lay-submit>立即发布</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="fly-footer">
+  <p><a href="http://fly.layui.com/" target="_blank">流光社区</a> 2020 &copy; <a>涛神出品</a></p>
+  <p>
+    <a href="http://fly.layui.com/jie/3147/" target="_blank">加入我们</a>
+    <a href="http://www.layui.com/template/fly/" target="_blank">成为会员</a>
+    <a href="http://fly.layui.com/jie/2461/" target="_blank">我要投稿</a>
+  </p>
+</div>
+<script src="/webjars/jquery/1.11.1/jquery.min.js"></script>
+<script src="/res/user.js"></script>
+<script src="/res/layui/layui.js"></script>
+<script>
+layui.cache.page = 'jie';
+layui.cache.user = {
+  username: '游客'
+  ,uid: -1
+  ,avatar: '/res/images/avatar/00.jpg'
+  ,experience: 83
+  ,sex: '男'
+};
+layui.config({
+  version: "3.0.0"
+  ,base: '/res/mods/'
+}).extend({
+  fly: 'index_ip'
+}).use('fly');
+</script>
+<script>
+  layui.use('element','jquery', function() {
+    var element = layui.element;
+    var jquery = layui.jquery;
+  })
+
+</script>
+</body>
+</html>

@@ -1,0 +1,29 @@
+server:
+  port: 8081
+spring:
+  resources:
+    static-locations: classpath:/templates/,classpath:/static/
+  tomcat:
+    time-between-eviction-runs-millis: 600000
+    min-evictable-idle-time-millis: 1800000
+  devtools:
+    restart:
+      enabled: true
+#  datasource:
+#    username: root
+#    password: 123456
+#    url: jdbc:mysql://106.14.45.97:3306/t?useUnicode=true&characterEncoding=utf-8&useSSL=true&serverTimezone=UTC
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+mybatis:
+  mapper-locations: classpath:mapping/*Mapper.xml
+  type-aliases-package: com.cheng.photography.pojo
+
+
+thymeleaf:
+  mode: HTML5
+  encoding: UTF-8
+  content-type: text/html
+  cache: false
+  prifix: classpath:/templates
+
+

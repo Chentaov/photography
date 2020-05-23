@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>layout 后台大布局 - Layui</title>
+    <link rel="stylesheet" href="/res/layui/css/layui.css">
+</head>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin" >
+    <div class="layui-header" th:fragment="head">
+        <div class="layui-logo"><font color="#1e90ff" size="4em">涛神的后台大赏</font></div><!--此处因插了超链接变暗-->
+        <!-- 头部区域（可配合layui已有的水平导航） -->
+        <ul class="layui-nav layui-layout-left">
+            <li class="layui-nav-item"><a href="/home">我的主页</a></li>
+            <li class="layui-nav-item"><a href="/index_jie">流光社区</a></li>
+            <li class="layui-nav-item"><a href="http://www.baidu.com">度娘</a></li>
+            <li class="layui-nav-item">
+                <a href="javascript:;">其它网站</a>
+                <dl class="layui-nav-child">
+                    <dd><a href="">邮件管理</a></dd>
+                    <dd><a href="">消息管理</a></dd>
+                    <dd><a href="">授权管理</a></dd>
+                </dl>
+            </li>
+        </ul>
+        <ul class="layui-nav layui-layout-right">
+            <li class="layui-nav-item">
+                <a href="javascript:;">
+                    <img id="head_icon"  th:src="${user.head_icon}" class="layui-nav-img">
+                    <label hidden="hidden" id="id" ></label>
+                    <label th:text="${user.name}" ></label>
+                </a>
+                <!--<dl class="layui-nav-child">-->
+                    <!--<dd><a href="/userInfo">信息设置</a></dd>-->
+                    <!--<dd><a href="/head_icon">修改头像</a></dd>-->
+                <!--</dl>-->
+            </li>
+            <li class="layui-nav-item"><a href="/dologout">退了</a></li>
+        </ul>
+    </div >
+
+    <div class="layui-side layui-bg-black" th:fragment="side" id="side">
+        <div class="layui-side-scroll">
+            <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+            <ul class="layui-nav layui-nav-tree"  lay-filter="test">head_icon.html
+                <li class="layui-nav-item layui-nav-item">
+                    <a class="layui-icon" href="javascript:;">&#xe613;用户管理</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="/user_list" class="layui-bg-blue">用户表</a></dd>
+                        <dd><a href="/lockedUser" class="layui-bg-red">封禁的用户</a></dd>
+                        <dd><a href="/mutedUser" class="layui-bg-green">禁言的用户</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item">
+                    <a href="javascript:;" class="layui-icon">&#xe655;帖子管理</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="/post" class="layui-bg-blue">管理帖子</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item">
+                    <a href="javascript:;" class="layui-icon">&#xe705;投稿管理</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="/ipost_bac_unpass" class="layui-bg-gray">待审稿</a></dd>
+                        <dd><a href="/ipost_bac_pass" class="layui-bg-blue">通过的投稿</a></dd>
+                        <dd><a href="/ipost_bac_setback" class="layui-bg-red">退回的投稿</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item" th:if="${user.identity>1}">
+                    <a href="javascript:;" class="layui-icon">&#xe609;授权管理</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="/user_0" class="layui-bg-blue">0级用户</a></dd>
+                        <dd><a href="/user_1" class="layui-bg-red">1级用户</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item">
+                    <a href="javascript:;" class="layui-icon">&#xe66a;页面更新</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="/set_main_style">基本设置</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item">
+                    <a href="javascript:;" class="layui-icon">&#xe62c;数据图表</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="/charts">表格1</a></dd>
+                    </dl>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="layui-body">
+        <!-- 内容主体区域 -->
+
+    </div>
+
+    <div class="layui-footer" th:fragment="footer">
+
+    </div>
+</div>
+
+<script src="/webjars/jquery/1.11.1/jquery.min.js"></script>
+<script src="/res/layui/layui.js"></script>
+<script>
+    //JavaScript代码区域
+    layui.use('element', function(){
+        var element = layui.element;
+
+    });
+</script>
+</body>
+</html>

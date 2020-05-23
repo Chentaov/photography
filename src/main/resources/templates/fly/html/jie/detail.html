@@ -1,0 +1,320 @@
+
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8">
+  <title>Fly Template v3.0，基于 layui 的极简社区页面模版</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="keywords" content="fly,layui,前端社区">
+  <meta name="description" content="Fly社区是模块化前端UI框架Layui的官网社区，致力于为web开发提供强劲动力">
+  <link rel="stylesheet" href="/res/layui/css/layui.css">
+  <link rel="stylesheet" href="/res/css/global.css">
+</head>
+<body>
+<cite class="layui-hide-xs" id="reply_name" th:text="${user.name}" style="display: none"></cite>
+<cite class="layui-hide-xs" id="reply_owner_id" th:text="${user.id}" style="display: none"></cite>
+<div th:replace="~{fly/html/jie/index :: head_nav }"></div>
+<!--<div class="fly-header layui-bg-black">-->
+  <!--<div class="layui-container">-->
+    <!--<a class="fly-logo" href="/index_jie">-->
+      <!--&lt;!&ndash;<img src="/res/images/logo.png" alt="layui">&ndash;&gt;-->
+    <!--</a>-->
+    <!--<ul class="layui-nav fly-nav layui-hide-xs">-->
+      <!--&lt;!&ndash;<li class="layui-nav-item layui-this">&ndash;&gt;-->
+        <!--&lt;!&ndash;<a href="/"><i class="iconfont icon-jiaoliu"></i>交流</a>&ndash;&gt;-->
+      <!--&lt;!&ndash;</li>&ndash;&gt;-->
+      <!--&lt;!&ndash;<li class="layui-nav-item">&ndash;&gt;-->
+        <!--&lt;!&ndash;<a href="../case/case.html"><i class="iconfont icon-iconmingxinganli"></i>案例</a>&ndash;&gt;-->
+      <!--&lt;!&ndash;</li>&ndash;&gt;-->
+      <!--&lt;!&ndash;<li class="layui-nav-item">&ndash;&gt;-->
+        <!--&lt;!&ndash;<a href="http://www.layui.com/" target="_blank"><i class="iconfont icon-ui"></i>框架</a>&ndash;&gt;-->
+      <!--&lt;!&ndash;</li>&ndash;&gt;-->
+    <!--</ul>-->
+
+    <!--<ul class="layui-nav fly-nav-user">-->
+
+      <!--&lt;!&ndash; 未登入的状态 &ndash;&gt;-->
+      <!--&lt;!&ndash;-->
+      <!--<li class="layui-nav-item">-->
+        <!--<a class="iconfont icon-touxiang layui-hide-xs" href="user/login.html"></a>-->
+      <!--</li>-->
+      <!--<li class="layui-nav-item">-->
+        <!--<a href="user/login.html">登入</a>-->
+      <!--</li>-->
+      <!--<li class="layui-nav-item">-->
+        <!--<a href="user/reg.html">注册</a>-->
+      <!--</li>-->
+      <!--<li class="layui-nav-item layui-hide-xs">-->
+        <!--<a href="/app/qq/" onclick="layer.msg('正在通过QQ登入', {icon:16, shade: 0.1, time:0})" title="QQ登入" class="iconfont icon-qq"></a>-->
+      <!--</li>-->
+      <!--<li class="layui-nav-item layui-hide-xs">-->
+        <!--<a href="/app/weibo/" onclick="layer.msg('正在通过微博登入', {icon:16, shade: 0.1, time:0})" title="微博登入" class="iconfont icon-weibo"></a>-->
+      <!--</li>-->
+       <!--&ndash;&gt;-->
+
+      <!--&lt;!&ndash; 登入后的状态 &ndash;&gt;-->
+      <!--<li class="layui-nav-item">-->
+        <!--<a class="fly-nav-avatar" href="javascript:;">-->
+          <!--<cite class="layui-hide-xs" id="reply_name" th:text="${user.name}"></cite>-->
+          <!--<cite class="layui-hide-xs" id="reply_owner_id" th:text="${user.id}" style="display: none"></cite>-->
+          <!--<i class="iconfont icon-renzheng layui-hide-xs" title="认证信息：layui 作者"></i>-->
+          <!--<i class="layui-badge fly-badge-vip layui-hide-xs" th:if="${user.exp}>=1 and ${user.exp}<5 ">摄影爱好者</i>-->
+          <!--<i class="layui-badge fly-badge-vip layui-hide-xs" th:if="${user.exp}>=5 and ${user.exp}<15">摄影新秀</i>-->
+          <!--<i class="layui-badge fly-badge-vip layui-hide-xs" th:if="${user.exp}>=15 and ${user.exp}<50">摄影师</i>-->
+          <!--<img th:src="${user.head_icon}">-->
+        <!--</a>-->
+        <!--<dl class="layui-nav-child">-->
+          <!--<dd><a href="/set"><i class="layui-icon">&#xe620;</i>基本设置</a></dd>-->
+          <!--<dd><a href="/message"><i class="iconfont icon-tongzhi" style="top: 4px;"></i>我的消息</a></dd>-->
+          <!--<dd><a href="/home"><i class="layui-icon" style="margin-left: 2px; font-size: 22px;">&#xe68e;</i>我的主页</a></dd>-->
+          <!--<hr style="margin: 5px 0;">-->
+          <!--<dd><a href="/dologout" style="text-align: center;">退出</a></dd>-->
+        <!--</dl>-->
+      <!--</li>-->
+    <!--</ul>-->
+  <!--</div>-->
+<!--</div>-->
+
+<div class="layui-hide-xs">
+  <div th:replace="~{fly/html/jie/index :: sub_nav}"></div>
+</div>
+
+<div class="layui-container">
+  <div class="layui-row layui-col-space15">
+    <div class="layui-col-md12 content detail">
+      <div class="fly-panel detail-box">
+        <h1 id="post_title" th:text="${detail.getPost_title()}"></h1>
+        <div class="fly-detail-info">
+          <!-- <span class="layui-badge">审核中</span> -->
+          <span class="layui-badge layui-bg-green fly-detail-column" th:text="${detail.post_type}"></span>
+
+          <!--<span class="layui-badge" style="background-color: #999;">未结</span>-->
+          <!-- <span class="layui-badge" style="background-color: #5FB878;">已结</span> -->
+
+          <span class="layui-badge layui-bg-black" th:if="${detail.post_top}">置顶</span>
+          <span class="layui-badge layui-bg-red" th:if="${detail.post_nice}">精帖</span>
+
+          <div class="fly-admin-box" th:data-id="${detail.getPost_id()}">
+            <span class="layui-btn layui-btn-xs jie-admin" type="del" th:if="${detail.poster_name}==${user.name} or ${user.identity}>=1">删除</span>
+
+            <span class="layui-btn layui-btn-xs jie-admin" type="set_top"  th:if="${user.identity}>=1">置顶</span>
+              <span class="layui-btn layui-btn-xs jie-admin" type="set_nice"  th:if="${user.identity}>=1">加精</span>
+             <span class="layui-btn layui-btn-xs jie-admin" type="un_setop" style="background-color:#ccc;" th:if="${user.identity}>=1">取消置顶</span>
+             <span class="layui-btn layui-btn-xs jie-admin" type="un_setnice"  style="background-color:#ccc;" th:if="${user.identity}>=1">取消加精</span>
+          </div>
+          <span class="fly-list-nums"> 
+            <a href="#comment"><i class="iconfont" title="回答" >&#xe60c;</i>[[${detail.getReply_count()}]]</a>
+            <i class="iconfont" title="人气">&#xe60b;</i> [[${detail.getClick_count()}]]
+          </span>
+        </div>
+        <div class="detail-about">
+          <a class="fly-avatar" th:href="@{/u(poster_id=${detail.poster_id})}">
+            <img th:src="${detail.head_icon}" alt="贤心">
+          </a>
+          <div class="fly-detail-user">
+            <a th:href="@{/u(poster_id=${detail.poster_id})}" class="fly-link">
+              <cite id="poster_name" th:text="${detail.poster_name}"></cite>
+              <cite id="accept_id" style="display: none" th:text="${detail.poster_id}"></cite>
+                <cite id="post_id" style="display: none" th:text="${detail.post_id}"></cite>
+                <i th:if="${detail.identity}>=1"  class="iconfont icon-renzheng" title="认证信息：{{ rows.user.approve }}"></i>
+              <i class="layui-badge fly-badge-vip layui-hide-xs" th:if="${user.exp}>=1 and ${user.exp}<5 ">摄影爱好者</i>
+              <i class="layui-badge fly-badge-vip layui-hide-xs" th:if="${user.exp}>=5 and ${user.exp}<15">摄影新秀</i>
+              <i class="layui-badge fly-badge-vip layui-hide-xs" th:if="${user.exp}>=15 and ${user.exp}<50">摄影师</i>
+            </a>
+            <span th:text="${detail.post_time}"></span>
+          </div>
+          <div class="detail-hits" id="LAY_jieAdmin" data-id="123">
+            <!--<span style="padding-right: 10px; color: #FF7200">悬赏：60飞吻</span>  -->
+            <!--<span class="layui-btn layui-btn-xs jie-admin" type="edit"><a href="add.html">编辑此贴</a></span>-->
+          </div>
+        </div>
+        <div class="detail-body photos" th:text="${detail.post_content}">
+        </div>
+      </div>
+
+      <div class="fly-panel detail-box" id="flyReply">
+        <fieldset class="layui-elem-field layui-field-title" style="text-align: center;">
+          <legend>回帖</legend>
+        </fieldset>
+
+        <ul class="jieda" id="jieda">
+          <li th:id="${re.getReply_id()}" th:data-id="${re.getZan_id()}" class="jieda-daan" th:each="re,c:${reply}">
+            <a name="item-1111111111"></a>
+            <div class="detail-about detail-about-reply">
+             [[${c.count}]]楼 <a class="fly-avatar" th:href="@{/u(poster_id=${re.reply_owner_id})}">
+                <img  th:src="${re.getHead_icon()}" >
+              </a>
+              <div class="fly-detail-user">
+                <a href="" class="fly-link">
+                  <cite th:id="${re.getReply_owner_id()}" th:text="${re.getReply_name()}"></cite>
+                  <i th:if="${re.getIdentity()}>=1"  class="iconfont icon-renzheng" title="认证信息：XXX"></i>
+                  <i class="layui-badge fly-badge-vip layui-hide-xs" th:if="${re.getExp()}>=1 and ${re.getExp()}<5 ">摄影爱好者</i>
+                  <i class="layui-badge fly-badge-vip layui-hide-xs" th:if="${re.getExp()}>=5 and ${re.getExp()}<15">摄影新秀</i>
+                  <i class="layui-badge fly-badge-vip layui-hide-xs" th:if="${re.getExp()}>=15 and ${re.getExp()}<50">摄影师</i>
+                </a>
+
+                <span th:if="${re.getReply_name()}==${detail.getPoster_name()}">(楼主)</span>
+
+                <span th:if="${re.getIdentity()}>0 and ${re.getIdentity()<2}" style="color:#5FB878">(管理员)</span>
+                <span th:if="${re.getIdentity()}>1" style="color:#FF9E3F">（社区之光）</span>
+                <!--<span style="color:#999">（该号已被封）</span>-->
+
+              </div>
+
+              <div class="detail-hits">
+                <!--<span th:text="${re.getReply_time()}"></span>-->
+              </div>
+
+              <!--<i class="iconfont icon-caina" title="最佳答案"></i>-->
+            </div>
+            <div class="detail-body jieda-body photos">
+                [[${re.getReply_content()}]]
+            </div>
+            <div class="jieda-reply">
+              <span th:if="${user.id}!=${re.reply_owner_id}" th:class="jieda-zan " th:classappend="${re.ok}==true  ? 'zanok':'' " type="zan"  >
+                <i class="iconfont icon-zan"   th:id="${re.getZan_id()}"></i>
+                <em  th:text="${re.getCount()}"></em>
+              </span>
+              <span type="reply">
+                <i class="iconfont icon-svgmoban53"></i>
+                回复
+              </span>
+
+              <div class="jieda-admin">
+                <span type="del" th:if="${re.getReply_owner_id()}==${user.id} or (${detail.getPoster_id()}==${user.id})">删除</span>
+                 <span th:if="${user.identity}>0" class="jieda-accept" type="accept">加精</span>
+                <span  th:text="${re.getReply_time()}"></span>
+
+              </div>
+            </div>
+          </li>
+
+          <!--<li data-id="111">-->
+            <!--<a name="item-1111111111"></a>-->
+            <!--<div class="detail-about detail-about-reply">-->
+              <!--<a class="fly-avatar" href="">-->
+                <!--<img src="https://tva1.sinaimg.cn/crop.0.0.118.118.180/5db11ff4gw1e77d3nqrv8j203b03cweg.jpg" alt=" ">-->
+              <!--</a>-->
+              <!--<div class="fly-detail-user">-->
+                <!--<a href="" class="fly-link">-->
+                  <!--<cite>贤心</cite>-->
+                <!--</a>-->
+              <!--</div>-->
+              <!--<div class="detail-hits">-->
+                <!--<span>2017-11-30</span>-->
+              <!--</div>-->
+            <!--</div>-->
+            <!--<div class="detail-body jieda-body photos">-->
+              <!--<p>蓝瘦那个香菇，这是一条没被采纳的回帖</p>-->
+            <!--</div>-->
+            <!--<div class="jieda-reply">-->
+              <!--<span class="jieda-zan" type="zan">-->
+                <!--<i class="iconfont icon-zan"></i>-->
+                <!--<em>0</em>-->
+              <!--</span>-->
+              <!--<span type="reply">-->
+                <!--<i class="iconfont icon-svgmoban53"></i>-->
+                <!--回复-->
+              <!--</span>-->
+              <!--<div class="jieda-admin">-->
+                <!--&lt;!&ndash;<span type="edit">编辑</span>&ndash;&gt;-->
+                <!--<span type="del">删除</span>-->
+                <!--<span class="jieda-accept" type="accept">加精</span>-->
+              <!--</div>-->
+            <!--</div>-->
+          <!--</li>-->
+
+          <!-- 无数据时 -->
+           <li class="fly-none" th:if="${reply.size()<=0}">消灭零回复</li>
+        </ul>
+
+        <div class="layui-form layui-form-pane">
+          <!--<form action="/jie/reply/" method="post">-->
+            <div class="layui-form-item layui-form-text">
+              <a name="comment"></a>
+              <div class="layui-input-block">
+                <textarea  id="L_content" name="content" required lay-verify="required" placeholder="请输入内容"  class="layui-textarea fly-editor" style="height: 150px;"></textarea>
+              </div>
+            </div>
+            <div class="layui-form-item">
+              <input type="hidden" name="jid" value="123">
+              <button style="background-color: deepskyblue" id="reply" class="layui-btn" lay-filter="XX" >提交回复</button>
+                <!--<button style="background-color: deepskyblue" id="tt" class="layui-btn" >测试</button>-->
+            </div>
+          <!--</form>-->
+        </div>
+      </div>
+    </div>
+  </div>
+    <!--<div class="layui-col-md4">-->
+        <!--<dl th:replace="~{fly/html/jie/index :: hot}"></dl>-->
+
+      <!--<div class="fly-panel">-->
+        <!--<div class="fly-panel-title">-->
+          <!--这里可作为广告区域-->
+        <!--</div>-->
+        <!--<div class="fly-panel-main">-->
+          <!--<a href="http://layim.layui.com/?from=fly" target="_blank" class="fly-zanzhu" time-limit="2017.09.25-2099.01.01" style="background-color: #5FB878;">LayIM 3.0 - layui 旗舰之作</a>-->
+        <!--</div>-->
+      <!--</div>-->
+
+      <!--<div class="fly-panel" style="padding: 20px 0; text-align: center;">-->
+        <!--<img src="/res/images/weixin.jpg" style="max-width: 100%;" alt="layui">-->
+        <!--<p style="position: relative; color: #666;">微信扫码关注 layui 公众号</p>-->
+      <!--</div>-->
+
+    <!--</div>-->
+  <!--</div>-->
+</div>
+
+<div class="fly-footer">
+  <p><a href="http://fly.layui.com/" target="_blank">流光社区</a> 2020 &copy; <a>涛神出品</a></p>
+  <p>
+    <a href="http://fly.layui.com/jie/3147/" target="_blank">加入我们</a>
+    <a href="http://www.layui.com/template/fly/" target="_blank">成为会员</a>
+    <a href="http://fly.layui.com/jie/2461/" target="_blank">我要投稿</a>
+  </p>
+</div>
+<script src="/webjars/jquery/1.11.1/jquery.min.js"></script>
+<script src="/res/user.js"></script>
+<script src="/res/layui/layui.js"></script>
+<script>
+    var deldata = [];
+layui.cache.page = 'jie';
+layui.cache.user = {
+  username: '游客'
+  ,uid: -1
+  ,avatar: '/res/images/avatar/00.jpg'
+  ,experience: 83
+  ,sex: '男'
+};
+layui.config({
+  version: "3.0.0"
+  ,base: '/res/mods/'
+}).extend({
+  fly: 'index_det'
+}).use(['fly', 'face'], function(){
+  var $ = layui.$
+  ,fly = layui.fly;
+  // 如果你是采用模版自带的编辑器，你需要开启以下语句来解析。
+
+  $('.detail-body').each(function(){
+    var othis = $(this), html = othis.html();
+    othis.html(fly.content(html));
+   for( var i in fly.dataurl(html)){
+       deldata.push(fly.dataurl(html)[i]);
+   }
+  });
+
+});
+</script>
+<script>
+  layui.use('element','jquery', function() {
+    var element = layui.element;
+    var jquery = layui.jquery;
+  })
+</script>
+
+</body>
+</html>

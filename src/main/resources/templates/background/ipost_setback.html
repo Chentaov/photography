@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<link rel="stylesheet" href="/res/layui/css/layui.css" media="all">
+<style>
+    .layui-table-cell{
+        height:auto !important;
+    }
+</style>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin" >
+    <div th:replace="~{background/index :: head}"></div>
+    <div th:replace="~{background/index :: side}"></div>
+    <div class="layui-body">
+        <div style="padding: 15px;">
+            <table  id="demo" lay-filter="test"></table>
+        </div>
+    </div>
+    <div th:replace="~{background/index :: footer}"></div>
+</div>
+</body>
+<script src="/webjars/jquery/1.11.1/jquery.min.js"></script>
+<script src="/res/layui/layui.all.js"></script>
+<script>
+    //JavaScript代码区域
+    layui.use('element','form','jquery', function(){
+        var element = layui.element;
+        var jquery = layui.jquery;
+    });
+</script>
+
+<script>
+    layui.use('table', function(){
+        var layer = layui.layer;
+        var table = layui.table;
+        //第一个实例
+        table.render({
+            elem: '#demo'//表格id
+            ,height: 'full-200'
+            ,width: '100%'
+            ,url: '/getIpost_bac_setback' //数据接口
+            ,toolbar: 'default'
+            // ,pages: Math.ceil(data.length/nums)
+            ,cols: [
+                [ //表头
+                    {field: 'ipost_img', title: '配图', width: 150,templet:'<div><img src="{{ d.ipost_img}}"></div>'}
+                    ,{field: 'ipost_title', title: '标题', width:180, sort: true}
+                    ,{field: 'ipost_leadwords', title: '导语', width:200,sort: true}
+                    ,{field: 'ipost_type', title: '分类', width:90, sort: true}
+                    ,{field: 'iposter_name', title: '作者', width:80, sort: true}
+                    ,{field: 'ipost_val', title: '评分', width:80, sort: true}
+                    ,{field: 'ipost_time', title: '发布时间', width:160}
+                    ,{field: 'ipost_id', title: '传送门', width: 95, sort: true,templet:'<div><a href="/detail_ph?ipost_id={{= d.ipost_id }}"><center>传送门</center></a></div>'}
+                    ,{field: 'id', title: '操作', width: 60,templet:'<div><button class="layui-btn layui-btn-sm layui-btn-danger"  lay-event="repass_ipost">恢复</button></div>'}
+                ]
+            ]
+            ,id: 'testReload'
+            ,page: true//启用分页
+            ,limit: 10//限制每一页的行数
+            ,limits: [5,10,15]//表示每一页可显示的行数
+    });
+
+
+        var $ = layui.$, active = {
+            reload: function(){
+                var demoReload = $('#demoReload');
+                //执行重载
+                table.reload('testReload', {
+                    page: {
+                        curr: 1 //重新从第 1 页开始
+                    }
+                    ,where: {
+                        name: demoReload.val(),
+                    }
+                }, 'data');
+            }
+        };
+
+        table.on('tool(test)',function (obj) {
+            layEvent = obj.event;
+            if(layEvent == 'repass_ipost'){
+                 // alert(JSON.stringify(obj.data.name)+"已被封");
+                var ipost_id = JSON.stringify(obj.data.ipost_id);
+                $.ajax({
+                    url:'/repass_ipost',
+                    type:'post',
+                    data:{"ipost_id":ipost_id},
+                    success:function (data) {
+                        if(JSON.stringify(data)=='true'){
+                            layer.msg(JSON.stringify(obj.data.ipost_title)+'已通过');
+                        }
+                        else{
+                            layer.msg('操作失败');
+                        }
+                    },
+                    error:function () {
+                        layer.msg('接口异常');
+                    }
+                })
+            }
+
+        })
+
+
+
+    });
+
+</script>
+<script>
+</script>
+</html>

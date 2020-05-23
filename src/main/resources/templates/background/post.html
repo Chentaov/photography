@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<link rel="stylesheet" href="/res/layui/css/layui.css" media="all">
+<style>
+    .layui-table-cell{
+        height:auto !important;
+    }
+</style>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin" >
+    <div th:replace="~{background/index :: head}"></div>
+    <div th:replace="~{background/index :: side}"></div>
+    <div class="layui-body">
+        <div style="padding: 15px;">
+            <div class="demoTable">
+                搜索ID：
+                <div class="layui-inline">
+                    <input class="layui-input" name="id" id="demoReload" autocomplete="off" >
+                </div>
+                <button class="layui-btn" data-type="reload">搜索</button>
+            </div>
+            <table id="demo" lay-filter="test"></table>
+        </div>
+    </div>
+    <div th:replace="~{background/index :: footer}"></div>
+</div>
+</body>
+<script src="/webjars/jquery/1.11.1/jquery.min.js"></script>
+<script src="/res/layui/layui.all.js"></script>
+<script>
+    //JavaScript代码区域
+    layui.use('element','form', function(){
+        var element = layui.element;
+    });
+</script>
+<script>
+    layui.use('table', function(){
+        var layer = layui.layer;
+        var table = layui.table;
+
+        //第一个实例
+        table.render({
+            elem: '#demo'//表格id
+            ,height: 'full-200'
+            ,width: '100%'
+            ,url: '/getPost' //数据接口
+            ,toolbar: 'default'
+            // ,pages: Math.ceil(data.length/nums)
+            ,cols: [
+                [ //表头
+                    {field: 'post_id', title: '贴编号', width: 150}
+                    ,{field: 'post_type', title: '分类', width:80, sort: true}
+                    ,{field: 'post_title', title: '标题', width:150}
+                    ,{field: 'post_status', title: '状态', width:80}
+                    ,{field: 'post_nice', title: '精华', width:50}
+                    ,{field: 'post_time', title: '时间', width: 200}
+                    ,{field: 'reply_count', title: '回复数', width: 150, sort: true}
+                    ,{field: 'post_id', title: '传送门', width: 150, sort: true,templet:'<div><a href="/detail?post_id={{= d.post_id }}">传送门</a></div>'}
+                ]
+            ]
+            ,id: 'testReload'
+            ,page: true//启用分页
+            ,limit: 10//限制每一页的行数
+            ,limits: [5,10,15]//表示每一页可显示的行数
+        });
+
+        var $ = layui.$, active = {
+            reload: function(){
+                var demoReload = $('#demoReload');
+
+                //执行重载
+                table.reload('testReload', {
+                    page: {
+                        curr: 1 //重新从第 1 页开始
+                    }
+                    ,where: {
+                        post_id: demoReload.val()
+                    }
+                }, 'data');
+            }
+        };
+
+        $('.demoTable .layui-btn').on('click', function(){
+            var type = $(this).data('type');
+            if($('#demoReload').val()=='' || !$.isNumeric($('#demoReload').val()) ){
+                layer.alert("非法数据");
+                // $(location).attr('href', '/user_detail');
+                return;
+            }
+            active[type] ? active[type].call(this) : '';
+        });
+    });
+
+</script>
+</html>

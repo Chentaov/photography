@@ -1,0 +1,362 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cheng.photography.dao.mapper.UserMapper">
+    <select id="login" resultType="com.cheng.photography.pojo.User">
+        select  * from photography.user where email = #{email} and password = #{password} and islock = 0
+    </select>
+    <select id="findUserById" resultType="com.cheng.photography.pojo.User">
+        select * from photography.user where id = #{id}
+    </select>
+    <select id="findUserByEmail" resultType="com.cheng.photography.pojo.User">
+        select * from photography.user where email = #{email}
+    </select>
+    <select id="check_email" resultType="com.cheng.photography.pojo.User">
+        select email from photography.user where email = #{email}
+    </select>
+    <insert id="register" parameterType="com.cheng.photography.pojo.User" >
+        insert into photography.user (email,name,password) values (#{email},#{name},#{password})
+    </insert>
+    <update id="actEmail" parameterType="com.cheng.photography.pojo.User">
+        update photography.user set status = 1 where id = #{id}
+    </update>
+    <update id="check_time" parameterType="com.cheng.photography.pojo.User">
+        update photography.user set check_time = #{check_time} where id = #{id}
+    </update>
+    <update id="check_timeByEmail" parameterType="com.cheng.photography.pojo.User">
+        update photography.user set check_time = #{check_time} where email =#{email}
+    </update>
+    <update id="updateUserInfo" parameterType="com.cheng.photography.pojo.User">
+        update photography.user set name = #{name},city = #{city},des = #{des},gender = #{gender}
+        where id = #{id}
+    </update>
+    <update id="updateEmailStatus" parameterType="com.cheng.photography.pojo.User">
+        update photography.user set status = 0
+        where id = #{id}
+    </update>
+    <update id="updateHeadIcon" parameterType="com.cheng.photography.pojo.User">
+        update photography.user set head_icon = #{head_icon}
+        where id = #{id}
+    </update>
+    <update id="updateIcon" parameterType="com.cheng.photography.pojo.User">
+        update photography.user set head_icon = #{head_icon}
+        where id = #{id}
+    </update>
+    <update id="updateEmail" parameterType="com.cheng.photography.pojo.User">
+        update photography.user set email = #{email}
+        where id = #{id}
+    </update>
+    <update id="updatePassword" parameterType="com.cheng.photography.pojo.User">
+        update photography.user set password = #{password}
+        where id = #{id}
+    </update>
+    <update id="resetPasswordByEmail" parameterType="com.cheng.photography.pojo.User">
+        update photography.user set password = '666666'
+        where email = #{email}
+    </update>
+    <insert id="userPost" parameterType="com.cheng.photography.pojo.User_post" >
+        insert into photography.user_post (poster_id, poster_name, post_type, post_title, post_content,post_time)
+        values(#{poster_id},#{poster_name},#{post_type},#{post_title},#{post_content},now())
+    </insert>
+    <select id="findAllPostTop" resultType="com.cheng.photography.pojo.User_post">
+       select * from photography.u_u_post where post_top = 1
+        <if test="post_type != null and post_type != ''">
+            and post_type = #{post_type}
+        </if>
+       order by post_time desc
+    </select>
+    <select id="findAllPost" resultType="com.cheng.photography.pojo.User_post">
+       select * from photography.u_u_post
+       where post_top = 0
+        <if test="post_type != null and post_type != ''">
+            and post_type = #{post_type}
+        </if>
+        order by post_time desc,reply_count desc
+       <if test="page !=null and page!='' ">
+           limit #{start},#{pageSize}
+       </if>
+    </select>
+    <select id="post_detail" resultType="com.cheng.photography.pojo.User_post">
+        select * from photography.u_u_post where post_id = #{id}
+    </select>
+    <insert id="replyByPosterId" parameterType="com.cheng.photography.pojo.Reply">
+        insert into photography.reply (reply_name, reply_owner_id, reply_content, accepter_id, post_id,reply_time)
+        value (#{reply_name},#{reply_owner_id},#{reply_content},#{accepter_id},#{post_id},now())
+    </insert>
+    <select id="findReplyByPostId" resultType="com.cheng.photography.pojo.Reply">
+        select * from photography.user_reply_zan
+        where post_id = #{post_id}
+    </select>
+    <select id="checkZanStatus" resultType="com.cheng.photography.pojo.Zan_reply">
+        select * from photography.zan_clicker
+        where zan_clicker.zan_id = #{zan_id} and zan_clicker.clicker_id = #{clicker_id} and zan_clicker.ok = true
+    </select>
+    <update id="ZanToTrue" parameterType="com.cheng.photography.pojo.Zan_reply">
+        update photography.zan_clicker set ok = true
+        where obj_id = #{obj_id} and clicker_id = #{clicker_id} and ok = false
+    </update>
+    <update id="ZanToFalse" parameterType="com.cheng.photography.pojo.Zan_reply">
+        update photography.zan_clicker set ok = false
+        where obj_id = #{obj_id} and clicker_id = #{clicker_id} and ok = true
+    </update>
+    <update id="ZanCountPlus" parameterType="com.cheng.photography.pojo.Zan_reply">
+        update photography.zan_reply set count = count+1
+        where  zan_id = #{zan_id}
+    </update>
+    <update id="ZanCountSub" parameterType="com.cheng.photography.pojo.Zan_reply">
+        update photography.zan_reply set count = count-1
+        where zan_id = #{zan_id}
+    </update>
+    <insert id="InitClicker" parameterType="com.cheng.photography.pojo.Reply_clicker">
+        insert into photography.reply_clicker (clicker_id, obj_id) value (#{clicker_id},#{obj_id})
+    </insert>
+    <select id="checkClickerAndZan" resultType="com.cheng.photography.pojo.Reply_clicker">
+        select * from photography.reply_clicker
+        where obj_id = #{obj_id} and clicker_id = #{clicker_id}
+    </select>
+    <select id="findUserPostByUid" resultType="com.cheng.photography.pojo.User_post">
+        select * from photography.user_post where poster_id = #{poster_id}
+        order by post_time desc
+    </select>
+    <insert id="notice" parameterType="com.cheng.photography.pojo.Notices">
+        insert into photography.notices (noticer_id,noticer, noticee_id, noticee, location_id, location_title, notice_content, notice_time)
+        value (#{noticer_id},#{noticer},#{noticee_id},#{noticee},#{location_id},#{location_title},#{notice_content},now())
+    </insert>
+    <select id="findMyNoticesById" resultType="com.cheng.photography.pojo.Notices">
+        select * from photography.notices
+        where noticee_id = #{#noticee_id} order by notice_time desc
+    </select>
+    <select id="weekHotPost" resultType="com.cheng.photography.pojo.User_post">
+        select * from photography.u_u_post
+        order by reply_count desc,post_time desc limit 9
+    </select>
+    <select id="weekReplyRank" resultType="com.cheng.photography.pojo.User">
+        select * from photography.user
+        order by ureply_count desc limit 16
+    </select>
+    <select id="findAllUser" resultType="com.cheng.photography.pojo.User">
+        select * from photography.user  where
+        <!--<if test="id !=null and id!='' ">-->
+            <!--id = #{id}  and !(identity >0)-->
+        <!--</if>-->
+        <!--<if test="id ==null or id=='' ">-->
+             <!--!(identity >0)-->
+        <!--</if>-->
+        <if test="name ==null or name=='' ">
+            !(identity >0)
+        </if>
+        <if test="name !=null and name!='' ">
+            name like CONCAT(CONCAT('%',#{name},'%')) or (id=#{name})   and !(identity >0)
+        </if>
+    </select>
+    <select id="Managers" resultType="com.cheng.photography.pojo.User">
+        select * from photography.user where identity=1
+    </select>
+    <update id="setPostTop" parameterType="com.cheng.photography.pojo.User_post">
+        update photography.user_post set post_top = 1
+        where post_id = #{post_id}
+    </update>
+    <update id="un_setPostTop" parameterType="com.cheng.photography.pojo.User_post">
+        update photography.user_post set post_top = 0
+        where post_id = #{post_id}
+    </update>
+    <update id="set_nice" parameterType="com.cheng.photography.pojo.User_post">
+        update photography.user_post set post_nice = 1
+        where post_id = #{post_id}
+    </update>
+    <update id="un_setnice" parameterType="com.cheng.photography.pojo.User_post">
+        update photography.user_post set post_nice = 0
+        where post_id = #{post_id}
+    </update>
+    <delete id="deleteReply" parameterType="com.cheng.photography.pojo.Reply">
+        delete from photography.reply
+        <if test="reply_id != null and reply_id!='' ">
+            where reply_id = #{reply_id}
+        </if>
+        <if test="post_id != null and post_id!='' ">
+            where post_id = #{post_id}
+        </if>
+    </delete>
+    <delete id="deletePost" parameterType="com.cheng.photography.pojo.User_post">
+        delete from photography.user_post where post_id = #{post_id}
+    </delete>
+    <select id="postList" resultType="com.cheng.photography.pojo.User_post">
+        select * from photography.user_post
+        <if test="post_id !=null and post_id!='' ">
+            where post_id = #{post_id}
+        </if>
+        order by post_time desc
+    </select>
+    <insert id="ipost" parameterType="com.cheng.photography.pojo.Ipost">
+        insert into photography.ipost (ipost_title,ipost_img, ipost_leadwords,ipost_content, ipost_type, ipost_class,ipost_keywords, ipost_mood, iposter_id, iposter_name, ipost_time)
+        values (#{ipost_title},#{ipost_img},#{ipost_leadwords},#{ipost_content},#{ipost_type},#{ipost_class},#{ipost_keywords},#{ipost_mood},#{iposter_id},#{iposter_name},now())
+    </insert>
+    <select id="findAllIpost" resultType="com.cheng.photography.pojo.Ipost">
+        select * from photography.ipost
+        where ipost_status = 1 and is_setback = 0
+         order by ipost_time desc limit 10
+    </select>
+    <select id="checkAllIpost" resultType="com.cheng.photography.pojo.Ipost">
+        select * from photography.ipost
+        where ipost_status = 0 and is_setback = 0
+         order by ipost_time desc
+    </select>
+    <select id="setbackedIpost" resultType="com.cheng.photography.pojo.Ipost">
+        select * from photography.ipost
+        where is_setback = 1
+         order by ipost_time desc
+    </select>
+    <select id="ipost_detail" resultType="com.cheng.photography.pojo.Ipost">
+        select * from photography.ipost
+        where ipost_id = #{ipost_id}
+    </select>
+    <insert id="addHabit">
+        insert into photography.habit (uid, p_class,visit_time)
+        values (#{uid},#{p_class},now())
+    </insert>
+    <select id="recommendIpost" statementType="CALLABLE" resultType="com.cheng.photography.pojo.Ipost">
+       {call photography.hab(#{uid,mode=IN,jdbcType=INTEGER})}
+    </select>
+    <update id="update_IpostTime" parameterType="com.cheng.photography.pojo.Ipost">
+        update photography.ipost set update_time = now() where ipost_id = #{ipost_id}
+    </update>
+    <select id="checkIpostValuer" resultType="com.cheng.photography.pojo.Ipost_val">
+        select * from photography.ipost_val where ipost_id = #{ipost_id} and valer_id = #{valer_id}
+    </select>
+    <insert id="InitValer" parameterType="com.cheng.photography.pojo.Ipost_val">
+        insert into photography.ipost_val (ipost_id, valer_id, valer_name,val) values (#{ipost_id},#{valer_id},#{valer_name},#{val})
+    </insert>
+    <update id="update_IpostVal" parameterType="com.cheng.photography.pojo.Ipost_val">
+        update photography.ipost_val set val = #{val} where ipost_id = #{ipost_id} and valer_id = #{valer_id}
+    </update>
+    <update id="ipost_counter" parameterType="com.cheng.photography.pojo.Ipost_val">
+        update photography.ipost set ipost_count = ipost_count+1
+        where ipost_id = #{ipost_id}
+    </update>
+    <update id="userpost_counter" parameterType="Int">
+        update photography.user_post set click_count = click_count+1
+        where post_id = #{post_id}
+    </update>
+    <update id="update_post_time" parameterType="int">
+        update photography.user_post set post_time = now()
+        where  post_id = #{post_id}
+    </update>
+    <select id="findAllUid" resultType="Integer">
+        select id from photography.user
+    </select>
+    <select id="findUserLikeIpost" resultType="Integer">
+        {call photography.user_like(#{uid,mode=IN,jdbcType=INTEGER})}
+    </select>
+    <select id="recommendIpost2" resultType="com.cheng.photography.pojo.Ipost">
+        select * from photography.ipost where ipost_id = #{ipost_id}
+    </select>
+    <insert id="followInit" parameterType="com.cheng.photography.pojo.Follow">
+        insert into photography.follow (follower_id, follower_name, obj_id, obj_name,follow_time)
+        values (#{follower_id},#{follower_name},#{obj_id},#{obj_name},now())
+    </insert>
+    <select id="checkFollowStatus" resultType="com.cheng.photography.pojo.Follow">
+        select * from photography.follow where obj_id = #{obj_id} and follower_id = #{follower_id}
+    </select>
+    <update id="follow_him" parameterType="com.cheng.photography.pojo.Follow" >
+        update photography.follow set follow_status = 1
+        where follower_id = #{follower_id} and obj_id = #{obj_id}
+    </update>
+    <update id="unfollow_him" parameterType="com.cheng.photography.pojo.Follow" >
+        update photography.follow set follow_status = 0
+        where follower_id = #{follower_id} and obj_id = #{obj_id}
+    </update>
+    <select id="isfollow" resultType="com.cheng.photography.pojo.Follow">
+        select * from photography.follow
+        where follower_id = #{follower_id} and obj_id = #{obj_id} and follow_status = 1
+    </select>
+    <select id="follow_status" resultType="Int">
+        select follow_status from photography.follow
+        where follower_id = #{follower_id} and obj_id = #{obj_id}
+    </select>
+    <select id="ifollowed" resultType="com.cheng.photography.pojo.Follow">
+        select * from photography.follow
+        where follower_id = #{follower_id} and follow_status = 1
+        order by follow_time desc
+    </select>
+    <select id="searchPost" resultType="com.cheng.photography.pojo.User_post">
+        select * from photography.u_u_post
+        where post_title like CONCAT(CONCAT('%',#{post_title},'%'))
+        order by post_time desc
+    </select>
+    <update id="updatePosterName" parameterType="com.cheng.photography.pojo.User_post">
+        update photography.user_post set poster_name = #{poster_name}
+        where poster_id = #{poster_id}
+    </update>
+    <update id="updateReplyerName" parameterType="com.cheng.photography.pojo.Reply">
+        update photography.reply set reply_name = #{reply_name}
+        where reply_owner_id = #{reply_owner_id}
+    </update>
+    <select id="iLiked" resultType="com.cheng.photography.pojo.Ipost_val">
+        select * from photography.iLikedIpost where val>4 and valer_id = #{valer_id}
+    </select>
+    <update id="lockUser" parameterType="Int">
+        update photography.user set islock = 1 where id = #{id}
+    </update>
+    <update id="unlockUser" parameterType="Int">
+        update photography.user set islock = 0 where id = #{id}
+    </update>
+    <select id="lockedUser" resultType="com.cheng.photography.pojo.User">
+        select * from photography.user where islock = 1
+        <if test="id !='' and id != null ">
+        and user.id = #{id}
+        </if>
+    </select>
+    <update id="muteUser" parameterType="Int">
+        update photography.user set ismute = 1 where id = #{id}
+    </update>
+    <update id="unmuteUser" parameterType="Int">
+        update photography.user set ismute = 0 where id = #{id}
+    </update>
+    <select id="mutedUser" resultType="com.cheng.photography.pojo.User">
+        select * from photography.user where ismute = 1
+        <if test="id !='' and id != null ">
+            and user.id = #{id}
+        </if>
+    </select>
+    <select id="findHeadicon" resultType="com.cheng.photography.pojo.User">
+        select * from photography.user where id = #{id}
+    </select>
+    <select id="isUserMute" resultType="com.cheng.photography.pojo.User">
+        select * from photography.user where id = #{id} and ismute = 1
+    </select>
+    <update id="passIpost" parameterType="com.cheng.photography.pojo.Ipost">
+        update photography.ipost set ipost_status = 1 where ipost_id = #{ipost_id}
+    </update>
+    <delete id="del_ipost" parameterType="com.cheng.photography.pojo.Ipost">
+        delete from photography.ipost where ipost_id = #{ipost_id}
+    </delete>
+    <update id="setback_ipost" parameterType="com.cheng.photography.pojo.Ipost">
+        update photography.ipost set is_setback = 1 where ipost_id = #{ipost_id}
+    </update>
+    <update id="repass_ipost"  parameterType="com.cheng.photography.pojo.Ipost">
+        update photography.ipost set is_setback = 0,ipost_status = 1 where ipost_id = #{ipost_id}
+    </update>
+    <update id="setManage" parameterType="com.cheng.photography.pojo.User">
+        update photography.user set identity = 1 where id = #{id}
+    </update>
+    <update id="setUser0" parameterType="com.cheng.photography.pojo.User">
+        update photography.user set identity = 0 where id = #{id}
+    </update>
+    <update id="setNav_color" parameterType="com.cheng.photography.pojo.Web_style">
+        update photography.web_style set style_val = #{style_val} where style = '导航主色'
+    </update>
+    <select id="readNav_color" resultType="com.cheng.photography.pojo.Web_style">
+        select photography.web_style.style_val from photography.web_style where style = '导航主色'
+    </select>
+    <update id="setERcode" >
+        update photography.web_style set style_val = #{style_val} where style = '群二维码'
+    </update>
+    <select id="readERcode" resultType="com.cheng.photography.pojo.Web_style">
+        select photography.web_style.style_val from photography.web_style where style = '群二维码'
+    </select>
+    <update id="setPhotoimg" parameterType="com.cheng.photography.pojo.Web_style">
+        update photography.web_style set style_val = #{style_val} where style = '摄影故事主图'
+    </update>
+    <select id="readPhotoimg" resultType="com.cheng.photography.pojo.Web_style">
+        select photography.web_style.style_val from photography.web_style where style = '摄影故事主图'
+    </select>
+</mapper>

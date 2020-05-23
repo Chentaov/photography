@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <div style="width: 600px;height: 300px">
+        <canvas id="popChart" width="150" height="100"></canvas>
+    </div>
+</body>
+<script src="/webjars/jquery/1.11.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+<script>
+    $(function () {
+        $.ajax({
+            url:'/getIpostData',
+            type:'post',
+            dataType:'json',
+            success:function (data) { //data是返回的json对象j
+                alert(JSON.stringify(data.title));
+                var popCanvas = $("#popChart");
+                var popCanvas = document.getElementById("popChart");
+                var popCanvas = document.getElementById("popChart").getContext("2d");
+                var barChart = new Chart(popCanvas, {
+                    type: 'pie',
+                    data: {
+                        labels: data.title, //data.title是json对象j中的title数组对象
+                        datasets: [{
+                            label: '统计',
+                            data: data.val, //data.val是json对象j中的val数组对象，和上面一样都是一个[]这种数组
+                            backgroundColor: [
+                                'rgba(255, 99, 132, 0.6)',
+                                'rgba(54, 162, 235, 0.6)',
+                                'rgba(255, 206, 86, 0.6)',
+                                'rgba(75, 192, 192, 0.6)',
+                                'rgba(153, 102, 255, 0.6)',
+                                'rgba(255, 159, 64, 0.6)',
+                                'rgba(255, 99, 132, 0.6)',
+                                'rgba(54, 162, 235, 0.6)',
+                                'rgba(255, 206, 86, 0.6)',
+                                'rgba(75, 192, 192, 0.6)',
+                                'rgba(255, 99, 132, 0.6)',
+                                'rgba(54, 162, 235, 0.6)',
+                                'rgba(255, 206, 86, 0.6)',
+                                'rgba(75, 192, 192, 0.6)',
+                                'rgba(153, 102, 255, 0.6)'
+                            ]
+                        }]
+                    }
+                });
+            }
+        })
+    })
+
+</script>
+</html>

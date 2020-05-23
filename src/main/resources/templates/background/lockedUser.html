@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<link rel="stylesheet" href="/res/layui/css/layui.css" media="all">
+<style>
+    .layui-table-cell{
+        height:auto !important;
+    }
+</style>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin" >
+    <div th:replace="~{background/index :: head}"></div>
+    <div th:replace="~{background/index :: side}"></div>
+    <div class="layui-body">
+        <div style="padding: 15px;">
+            <div class="demoTable">
+                搜索ID：
+                <div class="layui-inline">
+                    <input class="layui-input" name="id" id="demoReload" autocomplete="off" >
+                </div>
+                <button class="layui-btn" data-type="reload">搜索</button>
+            </div>
+            <table id="demo" lay-filter="test"></table>
+        </div>
+    </div>
+    <div th:replace="~{background/index :: footer}"></div>
+</div>
+</body>
+<script src="/webjars/jquery/1.11.1/jquery.min.js"></script>
+<script src="/res/layui/layui.all.js"></script>
+<script>
+    //JavaScript代码区域
+    layui.use('element','form', function(){
+        var element = layui.element;
+    });
+</script>
+<script>
+    layui.use('table', function(){
+        var layer = layui.layer;
+        var table = layui.table;
+
+        //第一个实例
+        table.render({
+            elem: '#demo'//表格id
+            ,height: 'full-200'
+            ,width: '100%'
+            ,url: '/getlockedUser' //数据接口
+            ,toolbar: 'default'
+            // ,pages: Math.ceil(data.length/nums)
+            ,cols: [
+                [ //表头
+                    {field: 'head_icon', title: '头像', width: 150,templet:'<div><img src="{{ d.head_icon}}"></div>'}
+                    ,{field: 'id', title: '编号', width:80, sort: true}
+                    ,{field: 'email', title: '邮箱', width:180, sort: true}
+                    ,{field: 'name', title: '姓名', width:80,sort: true}
+                    ,{field: 'password', title: '密码', width:80, sort: true}
+                    ,{field: 'ismute', title: '禁言', width:80, sort: true}
+                    ,{field: 'gender', title: '性别', width:50}
+                    ,{field: 'city', title: '城市', width: 120}
+                    ,{field: 'des', title: '签名', width: 200, sort: true}
+                    ,{field: 'identity', title: '身份', width: 60}
+                    ,{field: 'ureply_count', title: '回帖数', width: 80}
+                    ,{field: 'id', title: '操作', width: 180,templet:'<div><button class="layui-btn layui-btn-normal layui-btn-sm"  lay-event="unloc">解封</button>'}
+                ]
+            ]
+            ,id: 'testReload'
+            ,page: true//启用分页
+            ,limit: 10//限制每一页的行数
+            ,limits: [5,10,15]//表示每一页可显示的行数
+        });
+
+        table.on('tool(test)',function (obj) {
+            layEvent = obj.event;
+            if(layEvent == 'unloc'){
+                alert(JSON.stringify(obj.data.name)+"已解封");
+                var id = JSON.stringify(obj.data.id);
+                $.ajax({
+                    url:'/unlockUser',
+                    type:'post',
+                    data:{"id":id},
+                    success:function (data) {
+                        if(JSON.stringify(data)=='true'){
+                            layer.msg(JSON.stringify(obj.data.name)+'已被解封');
+                        }
+                        else{
+                            layer.msg('封禁失败');
+                        }
+                    },
+                    error:function () {
+                        layer.msg('接口异常');
+                    }
+                })
+            }
+            else if(layEvent == 'muit'){
+                alert(JSON.stringify(obj.data.name)+"已禁言");
+            }
+        })
+
+        var $ = layui.$, active = {
+            reload: function(){
+                var demoReload = $('#demoReload');
+
+                //执行重载
+                table.reload('testReload', {
+                    page: {
+                        curr: 1 //重新从第 1 页开始
+                    }
+                    ,where: {
+                        id: demoReload.val()
+                    }
+                }, 'data');
+            }
+
+
+        };
+
+        $('.demoTable .layui-btn').on('click', function(){
+            var type = $(this).data('type');
+            if($('#demoReload').val()=='' || !$.isNumeric($('#demoReload').val()) ){
+                layer.alert("非法数据");
+                // $(location).attr('href', '/user_detail');
+                return;
+            }
+            active[type] ? active[type].call(this) : '';
+        });
+    });
+
+</script>
+</html>

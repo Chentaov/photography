@@ -1,0 +1,169 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8">
+  <title>用户主页</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="keywords" content="fly,layui,前端社区">
+  <meta name="description" content="Fly社区是模块化前端UI框架Layui的官网社区，致力于为web开发提供强劲动力">
+  <link rel="stylesheet" href="/res/layui/css/layui.css">
+  <link rel="stylesheet" href="/res/css/global.css">
+</head>
+<body style="margin-top: 65px;">
+<label id="userid" th:text="${user.id}" style="display: none" />
+<label id="username" th:text="${user.name}" style="display: none" />
+<label id="obj_id" th:text="${u.id}" style="display: none"/>
+<label id="obj_name" th:text="${u.name}" style="display: none"/>
+<div class="fly-header " style="background-color:#336699">
+
+</div>
+
+<div class="fly-home fly-panel" style="background-image: url();">
+  <img th:src="${u.head_icon}" >
+  <i class="iconfont icon-renzheng" title="Fly社区认证"></i>
+  <h1>
+    [[${u.name}]]
+    <i class="iconfont icon-nan" th:if="${u.gender=='1'}"></i>
+     <i class="iconfont icon-nv" th:if="${u.gender=='0'}"></i>
+    <i class="layui-badge fly-badge-vip layui-hide-xs" th:if="${u.exp}>=1 and ${u.exp}<5 ">摄影爱好者</i>
+    <i class="layui-badge fly-badge-vip layui-hide-xs" th:if="${u.exp}>=5 and ${u.exp}<15">摄影新秀</i>
+    <i class="layui-badge fly-badge-vip layui-hide-xs" th:if="${u.exp}>=15 and ${u.exp}<50">摄影师</i>
+    <!--
+    <span style="color:#c00;">（管理员）</span>
+    <span style="color:#5FB878;">（社区之光）</span>
+    <span>（该号已被封）</span>
+    -->
+  </h1>
+
+  <p style="padding: 10px 0; color: #5FB878;">认证信息：一枚绣花摄影爱好者</p>
+
+  <p class="fly-home-info" >
+    <span style="color: #FF7200;" class="jieda-zan" th:if="${u.gender}==1">他有[[${u.exp}]]个<i class="iconfont icon-zan" title="赞"></i></span>
+    <span style="color: #FF7200;" class="jieda-zan" th:if="${u.gender}==0">她有[[${u.exp}]]个<i class="iconfont icon-zan" title="赞"></i></span>
+    <i class="iconfont icon-shijian"></i><span th:if="${u.check_time}" >[[${u.check_time}]] 加入</span>
+    <i class="iconfont icon-chengshi"></i><span>来自[[${u.city}]]</span>
+    <i class="iconfont icon-chengshi" th:if="${u.city}==null"></i><span th:if="${u.city}==null">可能来自火星</span>
+  </p>
+
+  <p class="fly-home-sign" th:if="${u.des}">（[[${u.des}]]）</p>
+  <p class="fly-home-sign" th:if="${u.des}==null">（神秘用户）</p>
+  <div class="fly-sns" data-user="" th:if="${obj_id}!=${user.id}" >
+    <a th:if="${follow_status==0} or ${follow_status==null} "  href="javascript:;" class="layui-btn layui-btn-normal fly-imActive" id="follow" >关注一波</a>
+    <a th:if="${follow_status}==1 " href="javascript:;" class="layui-btn layui-btn-primary fly-imActive" id="follow" >取关</a>
+    <!--<a href="javascript:;" class="layui-btn layui-btn-normal fly-imActive" data-type="chat">发起会话</a>-->
+  </div>
+
+</div>
+
+<div class="layui-container">
+  <div class="layui-row layui-col-space15">
+    <div class="layui-col-md12 fly-home-jie">
+      <div class="fly-panel">
+        <h3 class="fly-panel-title">[[${u.name}]] 最近的发表</h3>
+        <ul class="jie-row">
+          <li th:each="mp:${my_post}">
+            <span class="fly-jing" th:if="${mp.getPost_nice()}" >精</span>
+            <a th:href="@{/detail(post_id=${mp.getPost_id()})}" class="jie-title" th:text="${mp.getPost_title()}"> </a>
+            <i th:text="${mp.getPost_time()}"></i>
+            <em class="layui-hide-xs" th:text="${mp.getReply_count()}"></em>
+          </li>
+          <!--<li>-->
+            <!--<a href="" class="jie-title"> 基于 layui 的极简社区页面模版</a>-->
+            <!--<i>1天前</i>-->
+            <!--<em class="layui-hide-xs">1136阅/27答</em>-->
+          <!--</li>-->
+          <!--<li>-->
+            <!--<a href="" class="jie-title"> 基于 layui 的极简社区页面模版</a>-->
+            <!--<i>2017-10-30</i>-->
+            <!--<em class="layui-hide-xs">1136阅/27答</em>-->
+          <!--</li>-->
+          <!--<li>-->
+            <!--<a href="" class="jie-title"> 基于 layui 的极简社区页面模版</a>-->
+            <!--<i>1天前</i>-->
+            <!--<em class="layui-hide-xs">1136阅/27答</em>-->
+          <!--</li>-->
+          <!--<li>-->
+            <!--<a href="" class="jie-title"> 基于 layui 的极简社区页面模版</a>-->
+            <!--<i>1天前</i>-->
+            <!--<em class="layui-hide-xs">1136阅/27答</em>-->
+          <!--</li>-->
+          <!--<li>-->
+            <!--<a href="" class="jie-title"> 基于 layui 的极简社区页面模版</a>-->
+            <!--<i>1天前</i>-->
+            <!--<em class="layui-hide-xs">1136阅/27答</em>-->
+          <!--</li>-->
+          <!--<li>-->
+            <!--<a href="" class="jie-title"> 基于 layui 的极简社区页面模版</a>-->
+            <!--<i>1天前</i>-->
+            <!--<em class="layui-hide-xs">1136阅/27答</em>-->
+          <!--</li>-->
+           <div th:if="${my_post.size()<=0}" class="fly-none" style="min-height: 50px; padding:30px 0; height:auto;"><i style="font-size:14px;">没有发表任何求解</i></div>
+        </ul>
+      </div>
+    </div>
+    
+    <!--<div class="layui-col-md6 fly-home-da">-->
+      <!--<div class="fly-panel">-->
+        <!--<h3 class="fly-panel-title">[[${u.name}]] 最近的回答</h3>-->
+        <!--<ul class="home-jieda">-->
+          <!--<li>-->
+          <!--<p>-->
+          <!--<span>1分钟前</span>-->
+          <!--在<a href="" target="_blank">tips能同时渲染多个吗?</a>中回答：-->
+          <!--</p>-->
+          <!--<div class="home-dacontent">-->
+            <!--尝试给layer.photos加上这个属性试试：-->
+<!--<pre>-->
+<!--full: true         -->
+<!--</pre>-->
+            <!--文档没有提及-->
+          <!--</div>-->
+        <!--</li>-->
+        <!--<li>-->
+          <!--<p>-->
+          <!--<span>5分钟前</span>-->
+          <!--在<a href="" target="_blank">在Fly社区用的是什么系统啊?</a>中回答：-->
+          <!--</p>-->
+          <!--<div class="home-dacontent">-->
+            <!--Fly社区采用的是NodeJS。分享出来的只是前端模版-->
+          <!--</div>-->
+        <!--</li>-->
+        <!---->
+          <!--&lt;!&ndash; <div class="fly-none" style="min-height: 50px; padding:30px 0; height:auto;"><span>没有回答任何问题</span></div> &ndash;&gt;-->
+        <!--</ul>-->
+      <!--</div>-->
+    <!--</div>-->
+  </div>
+</div>
+
+<div class="fly-footer">
+  <p><a href="http://fly.layui.com/" target="_blank">Fly社区</a> 2017 &copy; <a href="http://www.layui.com/" target="_blank">layui.com 出品</a></p>
+  <p>
+    <a href="http://fly.layui.com/jie/3147/" target="_blank">付费计划</a>
+    <a href="http://www.layui.com/template/fly/" target="_blank">获取Fly社区模版</a>
+    <a href="http://fly.layui.com/jie/2461/" target="_blank">微信公众号</a>
+  </p>
+</div>
+<script src="/webjars/jquery/1.11.1/jquery.min.js"></script>
+<script src="/res/user.js"></script>
+<script src="/res/layui/layui.js"></script>
+<script>
+layui.cache.page = 'user';
+layui.cache.user = {
+  username: '游客'
+  ,uid: -1
+  ,avatar: '/res/images/avatar/00.jpg'
+  ,experience: 83
+  ,sex: '男'
+};
+layui.config({
+  version: "3.0.0"
+  ,base: '/res/mods/'
+}).extend({
+  fly: 'index'
+}).use('fly');
+</script>
+
+</body>
+</html>
