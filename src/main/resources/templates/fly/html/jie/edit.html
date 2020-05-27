@@ -3,7 +3,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="utf-8">
-  <title>发帖</title>
+  <title>编辑</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="keywords" content="fly,layui,前端社区">
   <meta name="description" content="Fly社区是模块化前端UI框架Layui的官网社区，致力于为web开发提供强劲动力">
@@ -81,29 +81,13 @@
         </ul>
         <div class="layui-form layui-tab-content" id="LAY_ucm" style="padding: 20px 0;">
           <div class="layui-tab-item layui-show">
-            <form action="/acceptPost" method="post"  >
+            <form action="/editPost" method="post"  >
               <div class="layui-row layui-col-space15 layui-form-item">
                 <div class="layui-col-md3">
                   <label class="layui-form-label">所在专栏</label>
                   <div class="layui-input-block">
-                    <select lay-verify="required" name="post_type" lay-filter="column">
-                        <option></option>
-                      <!--<option value="0" >专栏投稿</option>-->
-                      <!--<option value="99">美女</option>-->
-                      <option th:if="${user.identity}>=1" value="公告">公告</option>
-                      <option th:each="p:${pic}"  th:value="${p.tag}" th:text="${p.tag}+'（摄影）'"></option>
-                      <option th:each="v:${vdo}"  th:value="${v.tag_type}" th:text="${v.tag_type}+'（视频） '"></option>
-                      <!--<option value="艺术">艺术</option>-->
-                      <!--<option value="自拍">自拍</option>-->
-                      <!--<option value="美食">美食</option>-->
-                      <!--<option value="风光">风光</option>-->
-                      <!--<option value="动物">动物</option>-->
-                      <!--<option value="心情">心情</option>-->
-                      <!--<option value="航拍">航拍</option>-->
-                      <!--<option value="怀旧">怀旧</option>-->
-                      <!--<option value="清新">清新</option>-->
-                      <!--<option value="微观">微观</option>-->
-                      <!--<option value="美女">美女</option>-->
+                    <select disabled lay-verify="required" name="post_type" lay-filter="column">
+                      <option th:value="${post.post_type}" th:text="${post.post_type}"></option>
                     </select>
                   </div>
                 </div>
@@ -112,7 +96,8 @@
                   <div class="layui-input-block">
                       <input name="poster_id" th:value="${user.id}" style="display: none;">
                       <input name="poster_name" th:value="${user.name}" style="display: none;">
-                      <input type="text" id="L_title" name="post_title" required lay-verify="required" autocomplete="off" class="layui-input">
+                      <input name="post_id" th:value="${post.post_id}" style="display: none;">
+                      <input th:value="${post.post_title}" readonly="readonly" type="text" id="L_title" name="post_title" required lay-verify="required" autocomplete="off" class="layui-input">
                     <!-- <input type="hidden" name="id" value="{{d.edit.id}}"> -->
                   </div>
                 </div>
@@ -153,35 +138,11 @@
               </div>
               <div class="layui-form-item layui-form-text">
                 <div class="layui-input-block">
-                  <textarea id="L_content" name="post_content" required lay-verify="required" placeholder="详细描述" class="layui-textarea fly-editor" style="height: 260px;"></textarea>
+                  <textarea th:text="${post.post_content}" id="L_content" name="post_content" required lay-verify="required" placeholder="详细描述" class="layui-textarea fly-editor" style="height: 260px;"></textarea>
                 </div>
               </div>
-              <!--<div class="layui-form-item">-->
-                <!--<div class="layui-inline">-->
-                  <!--<label class="layui-form-label">悬赏飞吻</label>-->
-                  <!--<div class="layui-input-inline" style="width: 190px;">-->
-                    <!--<select name="experience">-->
-                      <!--<option value="20">20</option>-->
-                      <!--<option value="30">30</option>-->
-                      <!--<option value="50">50</option>-->
-                      <!--<option value="60">60</option>-->
-                      <!--<option value="80">80</option>-->
-                    <!--</select>-->
-                  <!--</div>-->
-                  <!--<div class="layui-form-mid layui-word-aux">发表后无法更改飞吻</div>-->
-                <!--</div>-->
-              <!--</div>-->
-              <!--<div class="layui-form-item">-->
-                <!--<label for="L_vercode" class="layui-form-label">人类验证</label>-->
-                <!--<div class="layui-input-inline">-->
-                  <!--<input type="text" id="L_vercode" name="vercode" required lay-verify="required" placeholder="请回答后面的问题" autocomplete="off" class="layui-input">-->
-                <!--</div>-->
-                <!--<div class="layui-form-mid">-->
-                  <!--<span style="color: #c00;">1+1=?</span>-->
-                <!--</div>-->
-              <!--</div>-->
               <div class="layui-form-item">
-                <button class="layui-btn" style="background-color:deepskyblue" lay-filter="l" lay-submit>立即发布</button>
+                <button class="layui-btn" style="background-color:deepskyblue" lay-filter="l" lay-submit>我更好了</button>
               </div>
             </form>
           </div>

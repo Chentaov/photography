@@ -11,6 +11,7 @@
   <link rel="stylesheet" href="/res/css/global.css">
 </head>
 <body>
+<label th:text="${user.id}" id="userid" style="display:none;"></label>
 <div th:replace="~{fly/html/jie/index :: head_nav }"></div>
 
 <!--<div class="fly-header layui-bg-black">-->
@@ -98,13 +99,13 @@
 	  <div class="layui-tab layui-tab-brief" lay-filter="user" id="LAY_msg" style="margin-top: 15px;">
 	    <button class="layui-btn layui-btn-danger" id="LAY_delallmsg">清空全部消息</button>
 	    <div  id="LAY_minemsg" style="margin-top: 10px;">
-        <!--<div class="fly-none">您暂时没有最新消息</div>-->
+        <div th:if="${notices.size()}<=0"  class="fly-none">您暂时没有最新消息</div>
         <ul class="mine-msg">
-          <li data-id="123" th:each="n :${notices}" th:if="${n.getNoticer()}!=${user.name}">
+          <li th:data-id="${n.getNotices_id()}" th:each="n :${notices}" th:if="${n.getNoticer()}!=${user.name}">
             <blockquote class="layui-elem-quote">
               <a th:href="@{/u(poster_id=${n.getNoticer_id()})}" ><cite th:text="${n.getNoticer()}"></cite></a>在<a  th:href="@{/detail(post_id=${n.getLocation_id()})}"><cite th:text="${n.getLocation_title()}"></cite></a> 回复 [[${n.getNotice_content()}]]
             </blockquote>
-            <p><span th:text="${n.getNotice_time()}"></span><a href="javascript:;" class="layui-btn layui-btn-small layui-btn-danger fly-delete">删除</a></p>
+            <p><span th:text="${n.getNotice_time()}"></span><a  class="layui-btn layui-btn-small layui-btn-danger fly-delete ">删除</a></p>
           </li>
           <!--<li data-id="123">-->
             <!--<blockquote class="layui-elem-quote">-->

@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>不乖的用户</title>
 </head>
 <link rel="stylesheet" href="/res/layui/css/layui.css" media="all">
 <style>
@@ -75,7 +75,7 @@
         table.on('tool(test)',function (obj) {
             layEvent = obj.event;
             if(layEvent == 'unloc'){
-                alert(JSON.stringify(obj.data.name)+"已解封");
+                // alert(JSON.stringify(obj.data.name)+"已解封");
                 var id = JSON.stringify(obj.data.id);
                 $.ajax({
                     url:'/unlockUser',

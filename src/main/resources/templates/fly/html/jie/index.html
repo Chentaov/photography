@@ -4,7 +4,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="utf-8">
-  <title>流光社区</title>
+  <title>[[${user.name}]]的小家</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="keywords" content="流光,社区,摄影">
   <meta name="description" content="流光社区为你提供纯粹美好的摄影分享之家">
@@ -19,6 +19,31 @@
     var jquery = layui.jquery;
   })
 </script>
+<style>
+  #nav {
+    position: fixed;
+    top: 50%;
+    right: 20px;
+    margin-top: -140px;
+    display: inline-block;
+    vertical-align: middle;
+  }
+  #nav a{
+    display: block;
+    position: relative;
+    width: 98px;
+    height: 28px;
+    line-height: 28px;
+    text-align: center;
+    background-color: #eee;
+    color: #333;
+    border-left: 2px solid transparent;
+  }
+  #nav a:hover{
+    width: 98px;
+    background-color: #1E9FFF !important;
+  }
+</style>
 <body>
 
 <div id="nav_header" class="fly-header " th:style="'background-color:'+*{nav_color}+';'"  th:fragment="head_nav">
@@ -72,7 +97,7 @@
           <dd><a href="/set"><i class="layui-icon">&#xe620;</i>基本设置</a></dd>
           <dd><a href="/message"><i class="iconfont icon-tongzhi" style="top: 4px;"></i>我的消息</a></dd>
           <dd><a href="/home"><i class="layui-icon" style="margin-left: 2px; font-size: 22px;">&#xe68e;</i>我的主页</a></dd>
-          <dd><a href="/index_bac" th:if="${user.identity}>=1"><i class="layui-icon" style="margin-left: 2px; font-size: 22px;">&#xe613; </i>我的后台</a></dd>
+          <dd><a href="/index_bac" th:if="${user.identity}>=1"><i class="layui-icon" style="margin-left: 2px; font-size: 22px;">&#xe613; </i>后台</a></dd>
           <hr style="margin: 5px 0;">
           <dd><a href="/dologout" style="text-align: center;">退出</a></dd>
         </dl>
@@ -100,6 +125,8 @@
       <!--<li class="layui-hide-xs layui-hide-sm layui-show-md-inline-block"><a href="/index_user#index">我发表的贴</a></li>-->
       <!--<li class="layui-hide-xs layui-hide-sm layui-show-md-inline-block"><a href="/index_user#collection">我收藏的贴</a></li>-->
     </ul>
+
+
     <div class="fly-column-right layui-hide-xs">
 
       <span class="fly-search"><i class="layui-icon"></i></span>
@@ -113,6 +140,14 @@
 </div>
 
 <div class="layui-container">
+  <div class="layui-carousel" id="test1" lay-filter="test1">
+    <div carousel-item="">
+      <div><img width="100%" height="97%" src="http://106.14.45.97:8081/art_img/20200526214211_1.png"></div>
+      <div><img width="100%" height="97%" src="http://106.14.45.97:8081/art_img/20200526214219_2.png"></div>
+      <div><img width="100%" height="97%" src="http://106.14.45.97:8081/art_img/20200526214224_3.png"></div>
+    </div>
+  </div>
+
   <div class="layui-row layui-col-space15">
     <div class="layui-col-md8 ">
       <div class="fly-panel" style="margin-bottom: 0;">
@@ -120,30 +155,38 @@
         <div class="fly-panel-title fly-filter">
           <a href="/index_jie" class="layui-this">综合</a>
           <span class="fly-mid"></span>
-          <a href="/index_jie?post_type=美女&page=1" >美女</a>
+          <a href="/index_jie?post_type=公告&page=1"  >公告</a>
           <span class="fly-mid"></span>
-          <a href="/index_jie?post_type=自拍&page=1"  >自拍</a>
-          <span class="fly-mid"></span>
-          <a href="/index_jie?post_type=动物&page=1"  >动物</a>
-          <span class="fly-mid"></span>
-          <a href="/index_jie?post_type=心情&page=1"  >心情</a>
-          <span class="fly-mid"></span>
-          <a href="/index_jie?post_type=航拍&page=1"  >航拍</a>
-          <span class="fly-mid"></span>
-          <a href="/index_jie?post_type=怀旧&page=1"  >怀旧</a>
-          <span class="fly-mid"></span>
-          <a href="/index_jie?post_type=清新&page=1"  >清新</a>
-          <span class="fly-mid"></span>
-          <a href="/index_jie?post_type=微观&page=1"  >微观</a>
-          <span class="fly-mid"></span>
-          <a href="/index_jie?post_type=风光&page=1">风光</a>
-          <span class="fly-filter-right layui-hide-xs">
+          <span th:each="p:${pic}">
+            <a th:href="@{/index_jie(post_type=${p.getTag()},page=1)}"  th:text="${p.getTag()}" ></a>
+            <span class="fly-mid"></span>
+          </span>
+
+          <!--<a href="/index_jie?post_type=自拍&page=1"  >自拍</a>-->
+          <!--<span class="fly-mid"></span>-->
+          <!--<a href="/index_jie?post_type=动物&page=1"  >动物</a>-->
+          <!--<span class="fly-mid"></span>-->
+          <!--<a href="/index_jie?post_type=心情&page=1"  >心情</a>-->
+          <!--<span class="fly-mid"></span>-->
+          <!--<a href="/index_jie?post_type=航拍&page=1"  >航拍</a>-->
+          <!--<span class="fly-mid"></span>-->
+          <!--<a href="/index_jie?post_type=怀旧&page=1"  >怀旧</a>-->
+          <!--<span class="fly-mid"></span>-->
+          <!--<a href="/index_jie?post_type=清新&page=1"  >清新</a>-->
+          <!--<span class="fly-mid"></span>-->
+          <!--<a href="/index_jie?post_type=微观&page=1"  >微观</a>-->
+          <!--<span class="fly-mid"></span>-->
+          <!--<a href="/index_jie?post_type=风光&page=1">风光</a>-->
+          <!--<span class="fly-filter-right layui-hide-xs">-->
             <!--<a href="" class="layui-this">按最新</a>-->
             <span class="fly-mid"></span>
             <!--<a href="">按热议</a>-->
           </span>
         </div>
-
+        <div id="nav" >
+          <a class="layui-bg-blue">视频</a>
+          <a th:each="v:${vdo}" th:href="@{/index_jie(post_type=${v.getTag()},page=1)}" class="active" th:text="${v.getTag()}"></a>
+        </div>
 
         <ul class="fly-list"> <!--置顶组!-->
           <li th:each="p:${user_post_top}">
@@ -214,7 +257,7 @@
 
         </ul>
 
-        <!-- <div class="fly-none">没有相关数据</div> -->
+         <div th:if="${user_post.size()}<=0" class="fly-none">没有相关数据</div>
 
         <div style="text-align: center" id="all">
           <div class="laypage-main"><a  th:href="@{/index_jie(page=1)}" class="laypage-first" title="首页">首页</a><a th:href="@{/index_jie(page=${page}-1)}"  class="laypage-next">上一页</a><a th:href="@{/index_jie(page=${page}+1)}" class="laypage-next">下一页</a><a th:href="@{/index_jie(page=${total}+1)}" class="laypage-last" title="尾页">尾页</a></div>
@@ -307,6 +350,18 @@ layui.config({
 }).extend({
   fly: 'index'
 }).use('fly');
+</script>
+<script>
+  layui.use(['carousel', 'form'], function(){
+    var carousel = layui.carousel
+            ,form = layui.form;
+    carousel.render({
+      elem: '#test1'
+      ,arrow: 'always'
+      ,width: '100%'
+      ,height:'400px'
+    });
+  })
 </script>
 </body>
 </html>

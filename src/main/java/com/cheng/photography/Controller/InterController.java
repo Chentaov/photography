@@ -8,11 +8,8 @@ import com.cheng.photography.util.IpUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -40,6 +37,21 @@ public class InterController {
             }
         }
       return new ModelAndView("redirect:/add");
+    }
+
+    @RequestMapping("editPost") //更贴
+    public ModelAndView editPost(User_post user_post, HttpSession session){
+        int id = Integer.parseInt(session.getAttribute("userid").toString());
+        if(userService.isUserMute(id)!=null && id==user_post.getPoster_id()){
+            return new ModelAndView("redirect:/alert");
+        }
+        else{
+            if(userService.updatePost(user_post)>0){
+                userService.update_post_time(user_post.getPost_id());
+                return new ModelAndView("redirect:/index_jie");
+            }
+        }
+        return new ModelAndView("redirect:/edit");
     }
 
     @RequestMapping("acceptReply")  //接收回复
@@ -397,6 +409,52 @@ public class InterController {
         return userService.readNav_color().getStyle_val();
     }
 
+
+    @RequestMapping("del_msg")  //删除消息
+    public String del_msg( int notices_id){
+        int flag = 1;
+        JSONObject j = new JSONObject();
+        if(userService.del_msg(notices_id)>0){
+            flag = 0;
+            j.put("status",flag);
+        }
+        return j.toJSONString();
+    }
+
+    @RequestMapping("del_allmsg")  //清空消息
+    public String del_allmsg( int noticee_id){
+        int flag = 1;//失败
+        JSONObject j = new JSONObject();
+        if(userService.del_allmsg(noticee_id)>0){
+            flag = 0; //成功
+            j.put("status",flag);
+        }
+        return j.toJSONString();
+    }
+
+    @RequestMapping("accept_best")  //采纳最佳
+    public String accept_best( int reply_id,int post_id){
+        int flag = 1;//失败
+        JSONObject j = new JSONObject();
+        if(userService.accept_best(reply_id)>0){
+            userService.close_reply_nice(post_id);
+            flag = 0; //成功
+            j.put("status",flag);
+        }
+        return j.toJSONString();
+    }
+
+    @RequestMapping("add_Tags") //新增标签
+    public void add_Tags(Tags tags){
+        System.out.println(tags);
+        userService.addTags(tags);
+    }
+
+    @RequestMapping("remove_Tags") //删除标签
+    public void remove_Tags(Tags tags){
+        System.out.println(tags);
+        userService.remove_Tags(tags);
+    }
 
     HttpUtils httpUtils;
     IpUtils ipUtils;

@@ -4,7 +4,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="utf-8">
-  <title>流光社区</title>
+  <title>看一看，瞧一瞧</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="keywords" content="流光,社区,摄影">
   <meta name="description" content="流光社区为你提供纯粹美好的摄影分享之家">
@@ -112,6 +112,10 @@
         <div class="fly-panel-title fly-filter">
           <a href="/index_jie" class="layui-this">综合</a>
           <span class="fly-mid"></span>
+          <span th:each="p:${pic}">
+            <a th:href="@{/index_jie(post_type=${p.getTag()},page=1)}"  th:text="${p.getTag()}" ></a>
+            <span class="fly-mid"></span>
+          </span>
           <!--<a href="/index_jie?post_type=美女&page=1" >美女</a>-->
           <!--<span class="fly-mid"></span>-->
           <!--<a href="/index_jie?post_type=自拍&page=1"  >自拍</a>-->
@@ -168,7 +172,7 @@
 
         </ul>
 
-        <!-- <div class="fly-none">没有相关数据</div> -->
+         <div th:if="${post.size()}<=0" class="fly-none">没有相关数据</div>
 
         <div style="text-align: center" id="all">
           <!--<div class="laypage-main"><a  th:href="@{/index_jie(page=1)}" class="laypage-first" title="首页">首页</a><a th:href="@{/index_jie(page=${page}-1)}"  class="laypage-next">上一页</a><a th:href="@{/index_jie(page=${page}+1)}" class="laypage-next">下一页</a><a th:href="@{/index_jie(page=${total}+1)}" class="laypage-last" title="尾页">尾页</a></div>-->

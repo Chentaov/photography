@@ -1,6 +1,11 @@
 package com.cheng.photography.pojo;
 
+import com.cheng.photography.util.TimeFormart;
 import lombok.*;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 
 @NoArgsConstructor
@@ -19,6 +24,7 @@ public class User_post {
     private int post_top;
     private int post_nice;
     private String post_time;
+    private String time;
     private String head_icon;
     private int page;//表示第几页
     private int pageSize;//页面大小
@@ -27,11 +33,17 @@ public class User_post {
     private int click_count; //点击数
     private int identity; //身份
     private int exp;
-//    private String [] deldata;
-//    private int zan_id;
-//    private int replyer_id;
-//    private int zan_reply_id;
-//    private int clicker_id;
-//    private boolean zan_status;
-//    private int count;
+    private int nice_replyed;
+    Date date;
+    TimeFormart timeFormart;
+    public String getPost_time()  {
+        try {
+            date = new SimpleDateFormat("yyyy-MM-dd kk:mm:ss").parse(post_time);
+        }
+        catch (ParseException e){
+
+        }
+        return timeFormart.format(date);
+    }
+
 }

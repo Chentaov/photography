@@ -4,12 +4,18 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="utf-8">
-  <title>Fly Template v3.0，基于 layui 的极简社区页面模版</title>
+  <title th:text="${detail.getPost_title()}"></title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="keywords" content="fly,layui,前端社区">
   <meta name="description" content="Fly社区是模块化前端UI框架Layui的官网社区，致力于为web开发提供强劲动力">
   <link rel="stylesheet" href="/res/layui/css/layui.css">
   <link rel="stylesheet" href="/res/css/global.css">
+  <link rel="stylesheet" type="text/css" href="at.alicdn.com/t/font_1841786_secynz57bt.css">
+<style>
+  #shenping{
+    position:absolute; right:10px; top:15px; width: 100px;
+  }
+</style>
 </head>
 <body>
 <cite class="layui-hide-xs" id="reply_name" th:text="${user.name}" style="display: none"></cite>
@@ -96,8 +102,8 @@
           <span class="layui-badge layui-bg-red" th:if="${detail.post_nice}">精帖</span>
 
           <div class="fly-admin-box" th:data-id="${detail.getPost_id()}">
-            <span class="layui-btn layui-btn-xs jie-admin" type="del" th:if="${detail.poster_name}==${user.name} or ${user.identity}>=1">删除</span>
-
+            <span class="layui-btn layui-btn-xs jie-admin" type="del" th:if="${detail.poster_id}==${user.id} or ${user.identity}>=1">删除</span>
+            <span class="layui-btn layui-btn-xs jie-admin"   th:if="${user.id}==${detail.poster_id}"><a  style="color: white" th:href="@{/edit(post_id=${detail.post_id})}">编辑</a></span>
             <span class="layui-btn layui-btn-xs jie-admin" type="set_top"  th:if="${user.identity}>=1">置顶</span>
               <span class="layui-btn layui-btn-xs jie-admin" type="set_nice"  th:if="${user.identity}>=1">加精</span>
              <span class="layui-btn layui-btn-xs jie-admin" type="un_setop" style="background-color:#ccc;" th:if="${user.identity}>=1">取消置顶</span>
@@ -110,7 +116,7 @@
         </div>
         <div class="detail-about">
           <a class="fly-avatar" th:href="@{/u(poster_id=${detail.poster_id})}">
-            <img th:src="${detail.head_icon}" alt="贤心">
+            <img th:src="${detail.head_icon}" th:alt="${detail.poster_name}">
           </a>
           <div class="fly-detail-user">
             <a th:href="@{/u(poster_id=${detail.poster_id})}" class="fly-link">
@@ -140,7 +146,7 @@
 
         <ul class="jieda" id="jieda">
           <li th:id="${re.getReply_id()}" th:data-id="${re.getZan_id()}" class="jieda-daan" th:each="re,c:${reply}">
-            <a name="item-1111111111"></a>
+            <a  name="item-1111111111"></a>
             <div class="detail-about detail-about-reply">
              [[${c.count}]]楼 <a class="fly-avatar" th:href="@{/u(poster_id=${re.reply_owner_id})}">
                 <img  th:src="${re.getHead_icon()}" >
@@ -152,6 +158,8 @@
                   <i class="layui-badge fly-badge-vip layui-hide-xs" th:if="${re.getExp()}>=1 and ${re.getExp()}<5 ">摄影爱好者</i>
                   <i class="layui-badge fly-badge-vip layui-hide-xs" th:if="${re.getExp()}>=5 and ${re.getExp()}<15">摄影新秀</i>
                   <i class="layui-badge fly-badge-vip layui-hide-xs" th:if="${re.getExp()}>=15 and ${re.getExp()}<50">摄影师</i>
+                  <i class="layui-badge fly-badge-vip layui-hide-xs" th:if="${re.getExp()}>=50 and ${re.getExp()}<100">大咖</i>
+                  <i class="layui-badge fly-badge-vip layui-hide-xs" th:if="${re.getExp()}>=100 and ${re.getExp()}<300">神</i>
                 </a>
 
                 <span th:if="${re.getReply_name()}==${detail.getPoster_name()}">(楼主)</span>
@@ -166,7 +174,9 @@
                 <!--<span th:text="${re.getReply_time()}"></span>-->
               </div>
 
-              <!--<i class="iconfont icon-caina" title="最佳答案"></i>-->
+              <!--<i class="iconfont icon-caina" th:if="${re.getReply_nice()}==1" title="最佳答案"></i>-->
+              <i  th:if="${re.getReply_nice()}==1" title="最佳答案"><img id="shenping" src="/res/神评.png"></i>
+
             </div>
             <div class="detail-body jieda-body photos">
                 [[${re.getReply_content()}]]
@@ -176,14 +186,16 @@
                 <i class="iconfont icon-zan"   th:id="${re.getZan_id()}"></i>
                 <em  th:text="${re.getCount()}"></em>
               </span>
-              <span type="reply">
+              <span th:if="${user.id}==${re.reply_owner_id}" type="reply">
+                <!--<i class="iconfont icon-svgmoban53"></i>-->
+              </span>
+              <span th:if="${user.id}!=${re.reply_owner_id}" type="reply">
                 <i class="iconfont icon-svgmoban53"></i>
                 回复
               </span>
-
               <div class="jieda-admin">
-                <span type="del" th:if="${re.getReply_owner_id()}==${user.id} or (${detail.getPoster_id()}==${user.id})">删除</span>
-                 <span th:if="${user.identity}>0" class="jieda-accept" type="accept">加精</span>
+                <span type="del" th:if="${user.identity>0} or ${re.getReply_owner_id()}==${user.id} or (${detail.getPoster_id()}==${user.id})">删除</span>
+                 <span th:if="${user.identity}>0 and ${detail.getNice_replyed()}==0"  class="jieda-accept" type="accept">加精</span>
                 <span  th:text="${re.getReply_time()}"></span>
 
               </div>
@@ -279,6 +291,7 @@
 <script src="/webjars/jquery/1.11.1/jquery.min.js"></script>
 <script src="/res/user.js"></script>
 <script src="/res/layui/layui.js"></script>
+<script src="/layui/layui.js"></script>
 <script>
     var deldata = [];
 layui.cache.page = 'jie';

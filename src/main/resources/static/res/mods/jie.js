@@ -159,6 +159,9 @@ layui.define('fly', function(exports){
         }
       })
     }
+
+
+
     //收藏
     ,collect: function(div){
       var othis = $(this), type = othis.data('type');
@@ -238,6 +241,7 @@ layui.define('fly', function(exports){
      //    }
      //  });
     }
+
     ,reply: function(li){ //回复
       var val = dom.content.val();
       var aite = '@'+ li.find('.fly-detail-user cite').text().replace(/\s/g, '');
@@ -297,48 +301,55 @@ layui.define('fly', function(exports){
     }
     ,accept: function(li){ //采纳
       var othis = $(this);
+      var post_id = $("#post_id").html();
+      // alert(post_id);
       layer.confirm('是否采纳该回答为最佳答案？', function(index){
         layer.close(index);
-        fly.json('/api/jieda-accept/', {
-          id: li.data('id')
+        fly.json('/accept_best', {
+          reply_id: li.attr('id'),
+          post_id:post_id
         }, function(res){
           if(res.status === 0){
             $('.jieda-accept').remove();
             li.addClass('jieda-daan');
-            li.find('.detail-about').append('<i class="iconfont icon-caina" title="最佳答案"></i>');
+            // li.find('.detail-about').append('<i class="iconfont icon-caina" title="最佳答案"></i>');
+            li.find('.detail-about').append('<i title="最佳答案"><img id="shenping" src="/res/神评.png"></i>');
           } else {
             layer.msg(res.msg);
           }
         });
       });
     }
-    ,edit: function(li){ //编辑
-      fly.json('/jie/getDa/', {
-        id: li.data('id')
-      }, function(res){
-        var data = res.rows;
-        layer.prompt({
-          formType: 2
-          ,value: data.content
-          ,maxlength: 100000
-          ,title: '编辑回帖'
-          ,area: ['728px', '300px']
-          ,success: function(layero){
-            fly.layEditor({
-              elem: layero.find('textarea')
-            });
-          }
-        }, function(value, index){
-          fly.json('/jie/updateDa/', {
-            id: li.data('id')
-            ,content: value
-          }, function(res){
-            layer.close(index);
-            li.find('.detail-body').html(fly.content(value));
-          });
-        });
-      });
-    }
+    // ,edit: function(li){ //编辑
+    //   fly.json('/jie/getDa/', {
+    //     id: li.data('id')
+    //   }, function(res){
+    //     var data = res.rows;
+    //     layer.prompt({
+    //       formType: 2
+    //       ,value: data.content
+    //       ,maxlength: 100000
+    //       ,title: '编辑回帖'
+    //       ,area: ['728px', '300px']
+    //       ,success: function(layero){
+    //         fly.layEditor({
+    //           elem: layero.find('textarea')
+    //         });
+    //       }
+    //     }, function(value, index){
+    //       fly.json('/jie/updateDa/', {
+    //         id: li.data('id')
+    //         ,content: value
+    //       }, function(res){
+    //         layer.close(index);
+    //         li.find('.detail-body').html(fly.content(value));
+    //       });
+    //     });
+    //   });
+    // }
+
+
+
     ,del: function(li){ //删除
        var reply_id= $(li).attr("id");
 

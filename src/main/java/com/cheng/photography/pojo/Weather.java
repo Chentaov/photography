@@ -18,8 +18,13 @@ private String weather_code;
 
     public String getWeather_code() {
         int index = weather_code.lastIndexOf("转");
+        System.out.println(index);
+        char weather_char [];
+        weather_char = weather_code.toCharArray();
+        System.out.println(weather_char.length);
         if(weather_code.contains("转")){
-          weather_code = weather_code.replaceFirst(weather_code.substring(index,weather.length()+1),"");
+//            System.out.println(weather_code);
+          weather_code = weather_code.replaceFirst(weather_code.substring(index,weather_char.length),"");
         }
         return "/weather/img/"+weather_code+".png";
     }

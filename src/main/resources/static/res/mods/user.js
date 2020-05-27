@@ -330,8 +330,8 @@ layui.define(['laypage', 'fly', 'element', 'flow'], function(exports){
     //阅读后删除
     dom.minemsg.on('click', '.mine-msg li .fly-delete', function(){
       var othis = $(this).parents('li'), id = othis.data('id');
-      fly.json('/message/remove/', {
-        id: id
+      fly.json('/del_msg', {
+        notices_id: id
       }, function(res){
         if(res.status === 0){
           othis.remove();
@@ -342,10 +342,11 @@ layui.define(['laypage', 'fly', 'element', 'flow'], function(exports){
 
     //删除全部
     $('#LAY_delallmsg').on('click', function(){
+      uid = $("#userid").html();
       var othis = $(this);
       layer.confirm('确定清空吗？', function(index){
-        fly.json('/message/remove/', {
-          all: true
+        fly.json('/del_allmsg', {
+          noticee_id: uid
         }, function(res){
           if(res.status === 0){
             layer.close(index);

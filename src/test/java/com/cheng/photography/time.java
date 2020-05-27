@@ -10,18 +10,10 @@ import java.util.logging.SimpleFormatter;
 
 public class time {
     @Test
-    public void time(){
-        Calendar nowTime = Calendar.getInstance();
-        Date nowDate = (Date) nowTime.getTime();
-        System.out.println(nowDate);
-        Calendar afterTime = Calendar.getInstance();
-        afterTime.add(Calendar.MINUTE, 5);
-        Date afterDate = (Date) afterTime.getTime();
-        System.out.println(afterDate);
-        System.out.println(afterDate.compareTo(nowDate));
-        SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd kk:mm:ss");
-        String now= f.format(nowDate);
-        String after = f.format(afterDate);
-        System.out.println(now.compareTo(after));
-    }
+
+        public void timeformart() throws Exception{
+            Date date = new SimpleDateFormat("yyyy-MM-dd kk:mm:ss").parse("2020-05-22 10:16:11");
+            System.out.println(date+"111");
+        }
+
 }

@@ -3,10 +3,12 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.cheng.photography.pojo.Ipost;
 
+import com.cheng.photography.pojo.Tags;
 import com.cheng.photography.pojo.User_post;
 import com.cheng.photography.pojo.Weather;
 import com.cheng.photography.service.UserService;
 
+import com.cheng.photography.util.TimeFormart;
 import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -35,8 +37,7 @@ public class ViewController {
     @Autowired
     private UserService userService;
 
-    @Autowired
-    InterController interController;
+    InterController interController = new InterController();
     public Weather getWeather(HttpServletRequest request){
         String weather = interController.getIp(request);
         Gson g = new Gson();
@@ -132,6 +133,7 @@ public class ViewController {
 //    上面是user模块的页面
 
 //    下面是jie模块
+    TimeFormart timeFormart;
     @RequestMapping("index_jie")  //用户发帖主页，此处user对象的信息是非动态的，动态要根据不变变量id来重新获取user对象信息。
     public ModelAndView index_jie(HttpSession session, User_post user_post,HttpServletRequest request){
         if(user_post.getPage()<=0){
@@ -146,10 +148,8 @@ public class ViewController {
         int start = (user_post.getPage()-1)*pageSize;
         user_post.setStart(start);
 
-
         ModelAndView m = new  ModelAndView();
         Weather w = getWeather(request);
-        System.out.println(w);
         m.addObject("weather",w);
         m.setViewName("fly/html/jie/index");
         m.addObject("total",userService.postList(user_post).size()/user_post.getPageSize());
@@ -157,6 +157,8 @@ public class ViewController {
 //        System.out.println("post_type:"+user_post.getPost_type());
         List<User_post> post_top = userService.findAllPostTop(user_post);
         List<User_post> post = userService.findAllPost(user_post);
+        List<Tags> pic = userService.tagList_pic();
+        List<Tags> vdo = userService.tagList_vdo();
         String nav_color = userService.readNav_color().getStyle_val();
         String ERcode = userService.readERcode().getStyle_val();
         m.addObject("nav_color",nav_color);
@@ -166,6 +168,8 @@ public class ViewController {
         m.addObject("page",user_post.getPage());
         m.addObject("weekHot",userService.weekHotPost(user_post));
         m.addObject("weekRank",userService.weekReplyRank());
+        m.addObject("pic",pic);
+        m.addObject("vdo",vdo);
         return m;
     }
 
@@ -188,13 +192,31 @@ public class ViewController {
 
     @RequestMapping("add")  //jie模块，此处user对象的信息是非动态的，动态要根据不变变量id来重新获取user对象信息。
     public ModelAndView add(HttpSession session,HttpServletRequest request){
+        List<Tags> pic = userService.tagList_pic();
+        List<Tags> vdo = userService.tagList_vdo();
         ModelAndView m = new  ModelAndView();
         m.setViewName("fly/html/jie/add");
+        Weather w = getWeather(request);
+        m.addObject("pic",pic);
+        m.addObject("vdo",vdo);
+        m.addObject("weather",w);
+        String nav_color = userService.readNav_color().getStyle_val();
+        m.addObject("nav_color",nav_color);
+        m.addObject("user",userService.findUserById((int)(session.getAttribute("userid"))));
+        return m;
+    }
+
+    @RequestMapping("edit")  //jie模块，此处user对象的信息是非动态的，动态要根据不变变量id来重新获取user对象信息。
+    public ModelAndView edit(HttpSession session,HttpServletRequest request,User_post user_post){
+        User_post u = userService.post_detail(user_post.getPost_id());
+        ModelAndView m = new  ModelAndView();
+        m.setViewName("fly/html/jie/edit");
         Weather w = getWeather(request);
         m.addObject("weather",w);
         String nav_color = userService.readNav_color().getStyle_val();
         m.addObject("nav_color",nav_color);
         m.addObject("user",userService.findUserById((int)(session.getAttribute("userid"))));
+        m.addObject("post",u);
         return m;
     }
 
@@ -238,6 +260,8 @@ public class ViewController {
     public ModelAndView searchPostView(String post_title,HttpSession session,User_post user_post,HttpServletRequest request){  //搜索视图
         ModelAndView m = new ModelAndView();
         m.setViewName("fly/html/jie/search");
+        List<Tags> pic = userService.tagList_pic();
+        List<Tags> vdo = userService.tagList_vdo();
         Weather w = getWeather(request);
         m.addObject("weather",w);
         String nav_color = userService.readNav_color().getStyle_val();
@@ -246,6 +270,8 @@ public class ViewController {
         m.addObject("user",userService.findUserById((int)(session.getAttribute("userid"))));
         m.addObject("post",userService.searchPost(post_title));
         m.addObject("weekHot",userService.weekHotPost(user_post));
+        m.addObject("pic",pic);
+        m.addObject("vdo",vdo);
         return m;
     }
 
@@ -454,11 +480,32 @@ public class ViewController {
         return m;
     }
 
-    @RequestMapping("set_main_style") //通过稿子
+    @RequestMapping("set_main_style") //页面更新
     public ModelAndView set_main_style(HttpSession session){
+        List<Tags> pic = userService.tagList_pic();
+        List<Tags> vdo = userService.tagList_vdo();
+        JSONArray p = new JSONArray();
+        JSONArray v = new JSONArray();
+        for (int i = 0;i<pic.size();i++){
+          p.add(pic.get(i).getTag());
+        }
+        for (int i = 0;i<vdo.size();i++){
+            v.add(vdo.get(i).getTag());
+        }
         ModelAndView m = new ModelAndView();
         m.setViewName("background/set_main_style");
+        String ps="";
+        String vs="";
+        for(int i =0; i<p.size();i++){
+            ps = ps+p.getString(i)+",";
+        }
+        for(int i =0; i<v.size();i++){
+            vs = vs+v.getString(i)+",";
+        }
+        m.addObject("pic",ps);
+        m.addObject("vdo",vs);
         m.addObject("user",userService.findUserById((int)(session.getAttribute("userid"))));
+
         return m;
     }
 

@@ -207,4 +207,13 @@ public class UserService {
     public Web_style readERcode(){return userMapper.readERcode();} //读二维码
     public int setPhotoimg(String style_val){return userMapper.setPhotoimg(style_val);} //写主图
     public Web_style readPhotoimg(){return userMapper.readPhotoimg();} //
+    public int del_msg(int notices_id){return userMapper.del_msg(notices_id);}//删除消息
+    public int del_allmsg(int noticee_id){return userMapper.del_allmsg(noticee_id);}//清空消息
+    public int accept_best(int reply_id){return userMapper.accept_best(reply_id);} //采纳最佳
+        public int close_reply_nice(int post_id){return userMapper.close_reply_nice(post_id);} //关闭神评
+    public int addTags(Tags tags){return userMapper.addTags(tags);} //新增标签
+    public int remove_Tags(Tags tags){return userMapper.remove_Tags(tags);} //删除标签
+    public List<Tags> tagList_pic(){return userMapper.tagList_pic();}//图标签list
+    public List<Tags> tagList_vdo(){return userMapper.tagList_vdo();}//视频标签list
+    public int updatePost(User_post user_post){return userMapper.updatePost(user_post);}//更新帖子
 }

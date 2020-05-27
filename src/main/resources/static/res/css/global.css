@@ -57,7 +57,7 @@ i{font-style: normal;}
 .icon-yulan:before{content:"\e60d"}
 .icon-liulanyanjing:before{content:"\e60b"}
 .icon-touxiang:before{content:"\e604"}
-.icon-caina:before{content:"\e613"}
+.icon-caina:before{content:"\e612"}/*613*/
 .icon-room:before{content:"\e615"}
 .icon-svgmoban53:before{content:"\e610"}
 .icon-shichang:before{content:"\e600"}
@@ -363,7 +363,7 @@ body .layui-edit-face  .layui-layer-content{padding:0; background-color:#fff; co
 .jieda li{position: relative; padding: 20px 0 10px; border-bottom: 1px dotted #DFDFDF;}
 .jieda li:last-child{border-bottom: none;}
 .jieda .fly-none{height: 50px; min-height: 0;}
-.jieda .icon-caina{position:absolute; right:10px; top:15px; font-size:60px; color: #58A571;}
+.jieda .icon-caina{position:absolute; right:10px; top:15px; font-size:60px; color: red;}
 
 .detail-about-reply{padding: 0 0 0 55px; background: none;}
 .detail-about-reply .detail-hits{left: 0; bottom: 0;}

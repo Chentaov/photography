@@ -99,4 +99,13 @@ public interface UserMapper {
     Web_style readERcode(); //读二维码
     int setPhotoimg(String style_val); //写主图
     Web_style readPhotoimg();//读主图
+    int del_msg(int notices_id); //删除消息
+    int del_allmsg(int noticee_id);//清空消息
+    int accept_best(int reply_id);//采纳
+    int close_reply_nice(int post_id);//关闭神评
+    int addTags(Tags tags); //新增标签
+    int remove_Tags(Tags tags);//删除标签
+    List<Tags> tagList_pic(); //图标签list
+    List<Tags> tagList_vdo();//视频标签list
+    int updatePost(User_post user_post);//更贴
 }

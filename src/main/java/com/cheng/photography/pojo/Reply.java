@@ -1,6 +1,11 @@
 package com.cheng.photography.pojo;
 
+import com.cheng.photography.util.TimeFormart;
 import lombok.*;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 @NoArgsConstructor
 
@@ -25,4 +30,16 @@ public class Reply {
     private int count;
     private int identity;
     private int exp;
+
+    Date date;
+    TimeFormart timeFormart;
+    public String getReply_time()  {
+        try {
+            date = new SimpleDateFormat("yyyy-MM-dd kk:mm:ss").parse(reply_time);
+        }
+        catch (ParseException e){
+
+        }
+        return timeFormart.format(date);
+    }
 }

@@ -2,9 +2,10 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>网页更新</title>
 </head>
 <link rel="stylesheet" href="/layui/css/layui.css" media="all">
+<link rel="stylesheet" href="/Jlables/assets/input_tags.css">
 <style>
 
 </style>
@@ -19,8 +20,8 @@
                     <li class="layui-this">导航栏配色</li>
                     <li>设置群二维码</li>
                     <li>摄影故事主图</li>
-                    <li>待开发</li>
-                    <li>待开发</li>
+                    <li>标签管理</li>
+                    <li>轮播图更新</li>
                 </ul>
                 <div class="layui-tab-content" style="height: 100px;">
                     <div class="layui-tab-item layui-show">
@@ -52,7 +53,22 @@
                             <p>点击上传，或将文件拖拽到此处</p>
                         </div>
                     </div>
-                    <div class="layui-tab-item">4</div>
+                    <div class="layui-tab-item">
+                        <form action="/add_Tags" class="formcl">
+                            <label class="tag_type" style="display: none;" name="tag_type">pic</label>
+                            <h3 style="color: #1E9FFF"><strong>图片标签</strong></h3>
+                            <div class="input_box" id="tags_pic">
+                                <input type="text" class="input_tags" name="tag" th:value="${pic}"  placeholder="起个好看的标签吧" />
+                            </div>
+                        </form>
+                        <form action="/add_Tags" class="formcl">
+                            <label class="tag_type"  name="tag_type" style="display: none;">vdo</label>
+                            <h3 style="color: red"><strong>视频标签</strong></h3>
+                            <div class="input_box" id="tags_vdo">
+                                <input type="text" class="input_tags" name="tag" th:value="${vdo}" placeholder="起个好看的标签吧" />
+                            </div>
+                        </form>
+                    </div>
                     <div class="layui-tab-item">5</div>
                     <div class="layui-tab-item">6</div>
                 </div>
@@ -63,8 +79,8 @@
 </div>
 </body>
 <script src="/webjars/jquery/1.11.1/jquery.min.js"></script>
-
 <script src="/layui/layui.all.js"></script>
+<script src="/Jlables/assets/input_tags.js"></script>
 
 <script>
     layui.use(['element','jquery','colorpicker','upload'], function(){
@@ -156,9 +172,10 @@
         });
     });
 </script>
-
 <script>
-
-
+    $(document).ready(function(e){
+        $.FreeTags('tags_pic');
+        $.FreeTags('tags_vdo');
+    });
 </script>
 </html>

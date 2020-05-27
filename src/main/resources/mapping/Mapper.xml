@@ -76,7 +76,7 @@
        </if>
     </select>
     <select id="post_detail" resultType="com.cheng.photography.pojo.User_post">
-        select * from photography.u_u_post where post_id = #{id}
+        select * from photography.u_u_post where post_id = #{post_id}
     </select>
     <insert id="replyByPosterId" parameterType="com.cheng.photography.pojo.Reply">
         insert into photography.reply (reply_name, reply_owner_id, reply_content, accepter_id, post_id,reply_time)
@@ -359,4 +359,31 @@
     <select id="readPhotoimg" resultType="com.cheng.photography.pojo.Web_style">
         select photography.web_style.style_val from photography.web_style where style = '摄影故事主图'
     </select>
+    <delete id="del_msg" parameterType="com.cheng.photography.pojo.Notices">
+        delete from photography.notices where notices_id = #{notices_id]}
+    </delete>
+    <delete id="del_allmsg" parameterType="com.cheng.photography.pojo.Notices">
+        delete from photography.notices where noticee_id = #{noticee_id]}
+    </delete>
+    <update id="accept_best" parameterType="com.cheng.photography.pojo.Reply">
+        update photography.reply set reply_nice = 1 where reply_id = #{reply_id}
+    </update>
+    <update id="close_reply_nice" parameterType="com.cheng.photography.pojo.User_post">
+        update photography.user_post set nice_replyed = 1 where post_id = #{post_id}
+    </update>
+    <insert id="addTags" parameterType="com.cheng.photography.pojo.Tags">
+        insert into photography.tags values(#{tag},#{tag_type})
+    </insert>
+    <delete id="remove_Tags" parameterType="com.cheng.photography.pojo.Tags">
+        delete from photography.tags where tag = #{tag}
+    </delete>
+    <select id="tagList_pic" resultType="com.cheng.photography.pojo.Tags">
+        select * from photography.tags where tag_type='pic'
+    </select>
+    <select id="tagList_vdo" resultType="com.cheng.photography.pojo.Tags">
+        select * from photography.tags where tag_type='vdo'
+    </select>
+    <update id="updatePost" parameterType="com.cheng.photography.pojo.User_post">
+        update photography.user_post set post_content = #{post_content} where post_id = #{post_id}
+    </update>
 </mapper>
